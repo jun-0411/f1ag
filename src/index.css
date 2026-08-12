@@ -43,6 +43,16 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --home-page: #0a0d12;
+  --home-card: #141922;
+  --home-row: #1a202b;
+  --home-elevated: #242c39;
+  --home-border: #303a49;
+  --home-primary: #ff2d46;
+  --home-secondary: #22d3c5;
+  --home-text: #f7f8fa;
+  --home-muted: #9aa4b2;
+  --home-positive: #35d39a;
 }
 
 html {
@@ -97,6 +107,16 @@ body {
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
+  --color-home-page: var(--home-page);
+  --color-home-card: var(--home-card);
+  --color-home-row: var(--home-row);
+  --color-home-elevated: var(--home-elevated);
+  --color-home-border: var(--home-border);
+  --color-home-primary: var(--home-primary);
+  --color-home-secondary: var(--home-secondary);
+  --color-home-text: var(--home-text);
+  --color-home-muted: var(--home-muted);
+  --color-home-positive: var(--home-positive);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
