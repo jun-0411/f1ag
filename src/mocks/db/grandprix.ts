@@ -1,0 +1,75 @@
+import type { GrandPrixListResponse } from '@/types/grandprix';
+
+export const GRAND_PRIX_MOCK_SEASON = 2026;
+
+// Home의 최근 경기·다음 경기·carousel 이동을 한 번에 검증할 수 있는 구간이다.
+export const grandPrixListMock: GrandPrixListResponse = {
+  grandprix: [
+    {
+      grandprix_id: 8,
+      is_current: false,
+      is_next: false,
+      name: 'Austrian Grand Prix',
+      round: 8,
+      nation_flag_image_id: null,
+      first_driver_id: 27,
+      first_driver_image_id: null,
+      date: '2026-06-28T13:00:00',
+    },
+    {
+      grandprix_id: 9,
+      is_current: true,
+      is_next: false,
+      name: 'British Grand Prix',
+      round: 9,
+      nation_flag_image_id: null,
+      first_driver_id: 3,
+      first_driver_image_id: null,
+      date: '2026-07-05T14:00:00',
+    },
+    {
+      grandprix_id: 10,
+      is_current: false,
+      is_next: true,
+      name: 'Belgian Grand Prix',
+      round: 10,
+      nation_flag_image_id: null,
+      first_driver_id: null,
+      first_driver_image_id: null,
+      date: '2026-07-19T13:00:00',
+    },
+    {
+      grandprix_id: 11,
+      is_current: false,
+      is_next: false,
+      name: 'Hungarian Grand Prix',
+      round: 11,
+      nation_flag_image_id: null,
+      first_driver_id: null,
+      first_driver_image_id: null,
+      date: '2026-07-26T13:00:00',
+    },
+    {
+      grandprix_id: 12,
+      is_current: false,
+      is_next: false,
+      name: 'Dutch Grand Prix',
+      round: 12,
+      nation_flag_image_id: null,
+      first_driver_id: null,
+      first_driver_image_id: null,
+      date: '2026-08-23T13:00:00',
+    },
+    {
+      grandprix_id: 13,
+      is_current: false,
+      is_next: false,
+      name: 'Italian Grand Prix',
+      round: 13,
+      nation_flag_image_id: null,
+      first_driver_id: null,
+      first_driver_image_id: null,
+      date: '2026-09-06T13:00:00',
+    },
+  ],
+};
