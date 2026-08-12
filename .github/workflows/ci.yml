@@ -23,5 +23,8 @@ jobs:
       - name: Format package.json
         run: yarn biome check package.json --write
 
+      - name: Format MSW worker
+        run: yarn biome format --write public/mockServiceWorker.js
+        
       - name: Check
         run: yarn check-all
