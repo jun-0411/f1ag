@@ -1,6 +1,8 @@
 import {
   GRAND_PRIX_MOCK_SEASON,
+  grandPrixDetailMockById,
   grandPrixListMock,
+  grandPrixOverviewMockById,
 } from '@/mocks/db/grandprix';
 import type { ApiErrorResponse } from '@/types/api';
 import { http, HttpResponse } from 'msw';
@@ -25,7 +27,70 @@ const createSeasonValidationError = (
   ],
 });
 
+const createGrandPrixIdValidationError = (input: string): ApiErrorResponse => ({
+  detail: [
+    {
+      type: 'int_parsing',
+      loc: ['path', 'grand_prix_id'],
+      msg: 'Input should be a valid integer, unable to parse string as an integer',
+      input,
+    },
+  ],
+});
+
+const parseGrandPrixId = (
+  parameter: string | readonly string[] | undefined
+): number | null => {
+  if (typeof parameter !== 'string' || !/^[+-]?\d+$/.test(parameter)) {
+    return null;
+  }
+
+  return Number(parameter);
+};
+
 export const grandPrixHandlers = [
+  http.get('*/api/grandprix/:grandPrixId/overview', ({ params }) => {
+    const grandPrixIdParameter = params.grandPrixId;
+    const grandPrixId = parseGrandPrixId(grandPrixIdParameter);
+
+    if (grandPrixId === null) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createGrandPrixIdValidationError(String(grandPrixIdParameter)),
+        { status: 422 }
+      );
+    }
+
+    const overview = grandPrixOverviewMockById[grandPrixId];
+    if (overview === undefined) {
+      return HttpResponse.json<ApiErrorResponse>(
+        { detail: `Grand Prix ${grandPrixId} not found` },
+        { status: 404 }
+      );
+    }
+
+    return HttpResponse.json(overview);
+  }),
+  http.get('*/api/grandprix/:grandPrixId', ({ params }) => {
+    const grandPrixIdParameter = params.grandPrixId;
+    const grandPrixId = parseGrandPrixId(grandPrixIdParameter);
+
+    if (grandPrixId === null) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createGrandPrixIdValidationError(String(grandPrixIdParameter)),
+        { status: 422 }
+      );
+    }
+
+    const grandPrix = grandPrixDetailMockById[grandPrixId];
+    if (grandPrix === undefined) {
+      return HttpResponse.json<ApiErrorResponse>(
+        { detail: `Grand Prix ${grandPrixId} not found` },
+        { status: 404 }
+      );
+    }
+
+    return HttpResponse.json(grandPrix);
+  }),
   http.get('*/api/grandprix', ({ request }) => {
     const requestUrl = new URL(request.url);
     const seasonParameter = requestUrl.searchParams.get('season');

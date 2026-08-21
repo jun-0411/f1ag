@@ -1,4 +1,8 @@
-import type { GrandPrixListResponse } from '@/types/grandprix';
+import type {
+  GrandPrixListResponse,
+  GrandPrixOverviewResponse,
+  GrandPrixResponse,
+} from '@/types/grandprix';
 
 export const GRAND_PRIX_MOCK_SEASON = 2026;
 
@@ -72,4 +76,226 @@ export const grandPrixListMock: GrandPrixListResponse = {
       date: '2026-09-06T13:00:00',
     },
   ],
+};
+
+export const grandPrixDetailMockById: Record<number, GrandPrixResponse> = {
+  8: {
+    name: 'Austrian Grand Prix',
+    round: 8,
+    circuit_name: 'Red Bull Ring',
+    circuit_id: 14,
+    nation_flag_image_id: null,
+    is_sprint: false,
+  },
+  9: {
+    name: 'British Grand Prix',
+    round: 9,
+    circuit_name: 'Silverstone Circuit',
+    circuit_id: 18,
+    nation_flag_image_id: null,
+    is_sprint: true,
+  },
+  10: {
+    name: 'Belgian Grand Prix',
+    round: 10,
+    circuit_name: 'Circuit de Spa-Francorchamps',
+    circuit_id: 19,
+    nation_flag_image_id: null,
+    is_sprint: false,
+  },
+  11: {
+    name: 'Hungarian Grand Prix',
+    round: 11,
+    circuit_name: 'Hungaroring',
+    circuit_id: 5,
+    nation_flag_image_id: null,
+    is_sprint: false,
+  },
+  12: {
+    name: 'Dutch Grand Prix',
+    round: 12,
+    circuit_name: 'Circuit Park Zandvoort',
+    circuit_id: 24,
+    nation_flag_image_id: null,
+    is_sprint: true,
+  },
+  13: {
+    name: 'Italian Grand Prix',
+    round: 13,
+    circuit_name: 'Autodromo Nazionale di Monza',
+    circuit_id: 13,
+    nation_flag_image_id: null,
+    is_sprint: false,
+  },
+};
+
+const tireAllocationMock = [
+  { tire_code: 1, tire_type: 'HARD', tire_set: 2 },
+  { tire_code: 2, tire_type: 'MEDIUM', tire_set: 4 },
+  { tire_code: 3, tire_type: 'SOFT', tire_set: 6 },
+  { tire_code: 4, tire_type: 'INTERMEDIATE', tire_set: 6 },
+  { tire_code: 5, tire_type: 'WET', tire_set: 2 },
+];
+
+export const grandPrixOverviewMockById: Record<
+  number,
+  GrandPrixOverviewResponse
+> = {
+  8: {
+    schedule: [
+      { session_code: 'FP1', time: '2026-06-26T11:30:00' },
+      { session_code: 'FP2', time: '2026-06-26T15:00:00' },
+      { session_code: 'FP3', time: '2026-06-27T10:30:00' },
+      { session_code: 'Q', time: '2026-06-27T14:00:00' },
+      { session_code: 'R', time: '2026-06-28T13:00:00' },
+    ],
+    weather: [
+      { session_code: 'FP1', temperature: null, rainfall: null },
+      { session_code: 'FP2', temperature: 31.917284, rainfall: false },
+      { session_code: 'FP3', temperature: 31.302469, rainfall: false },
+      { session_code: 'Q', temperature: 33.34875, rainfall: false },
+      { session_code: 'R', temperature: 34.467114, rainfall: false },
+    ],
+    tire: [],
+    circuit: {
+      circuit_korean_name: null,
+      circuit_english_name: 'Red Bull Ring',
+      circuit_region_name: 'Austria',
+      circuit_image_id: null,
+      circuit_laps: 71,
+      circuit_one_lap_length: null,
+      circuit_total_length: null,
+    },
+  },
+  9: {
+    schedule: [
+      { session_code: 'FP1', time: '2026-07-03T11:30:00' },
+      { session_code: 'SQ', time: '2026-07-03T15:30:00' },
+      { session_code: 'S', time: '2026-07-04T11:00:00' },
+      { session_code: 'Q', time: '2026-07-04T15:00:00' },
+      { session_code: 'R', time: '2026-07-05T14:00:00' },
+    ],
+    weather: [
+      { session_code: 'FP1', temperature: 22.02381, rainfall: false },
+      { session_code: 'SQ', temperature: 25.105, rainfall: false },
+      { session_code: 'S', temperature: 22.572152, rainfall: false },
+      { session_code: 'Q', temperature: 25.228571, rainfall: false },
+      { session_code: 'R', temperature: 24.758333, rainfall: false },
+    ],
+    // 실제 API의 미완성 null을 보완해 Figma의 정상·빈 상태를 모두 개발할 수 있게 한다.
+    tire: tireAllocationMock,
+    circuit: {
+      circuit_korean_name: '실버스톤 서킷',
+      circuit_english_name: 'Silverstone Circuit',
+      circuit_region_name: 'UK',
+      circuit_image_id: null,
+      circuit_laps: 52,
+      circuit_one_lap_length: 5.891,
+      circuit_total_length: 306.198,
+    },
+  },
+  10: {
+    schedule: [
+      { session_code: 'FP1', time: '2026-07-17T11:30:00' },
+      { session_code: 'FP2', time: '2026-07-17T15:00:00' },
+      { session_code: 'FP3', time: '2026-07-18T10:30:00' },
+      { session_code: 'Q', time: '2026-07-18T14:00:00' },
+      { session_code: 'R', time: '2026-07-19T13:00:00' },
+    ],
+    weather: [
+      { session_code: 'FP1', temperature: 24.034568, rainfall: false },
+      { session_code: 'FP2', temperature: 23.951807, rainfall: true },
+      { session_code: 'FP3', temperature: 20.254118, rainfall: true },
+      { session_code: 'Q', temperature: 21.113636, rainfall: true },
+      { session_code: 'R', temperature: 18.035616, rainfall: false },
+    ],
+    tire: [],
+    circuit: {
+      circuit_korean_name: null,
+      circuit_english_name: 'Circuit de Spa-Francorchamps',
+      circuit_region_name: 'Belgium',
+      circuit_image_id: null,
+      circuit_laps: 44,
+      circuit_one_lap_length: null,
+      circuit_total_length: null,
+    },
+  },
+  11: {
+    schedule: [
+      { session_code: 'FP1', time: '2026-07-24T11:30:00' },
+      { session_code: 'FP2', time: '2026-07-24T15:00:00' },
+      { session_code: 'FP3', time: '2026-07-25T10:30:00' },
+      { session_code: 'Q', time: '2026-07-25T14:00:00' },
+      { session_code: 'R', time: '2026-07-26T13:00:00' },
+    ],
+    weather: [
+      { session_code: 'FP1', temperature: null, rainfall: null },
+      { session_code: 'FP2', temperature: 23.587805, rainfall: false },
+      { session_code: 'FP3', temperature: 24.865, rainfall: false },
+      { session_code: 'Q', temperature: 26.788158, rainfall: false },
+      { session_code: 'R', temperature: 30.754777, rainfall: false },
+    ],
+    tire: [],
+    circuit: {
+      circuit_korean_name: null,
+      circuit_english_name: 'Hungaroring',
+      circuit_region_name: 'Hungary',
+      circuit_image_id: null,
+      circuit_laps: 70,
+      circuit_one_lap_length: null,
+      circuit_total_length: null,
+    },
+  },
+  12: {
+    schedule: [
+      { session_code: 'FP1', time: '2026-08-21T10:30:00' },
+      { session_code: 'SQ', time: '2026-08-21T14:30:00' },
+      { session_code: 'S', time: '2026-08-22T10:00:00' },
+      { session_code: 'Q', time: '2026-08-22T14:00:00' },
+      { session_code: 'R', time: '2026-08-23T13:00:00' },
+    ],
+    weather: [
+      { session_code: 'FP1', temperature: null, rainfall: null },
+      { session_code: 'SQ', temperature: null, rainfall: null },
+      { session_code: 'S', temperature: null, rainfall: null },
+      { session_code: 'Q', temperature: null, rainfall: null },
+      { session_code: 'R', temperature: null, rainfall: null },
+    ],
+    tire: [],
+    circuit: {
+      circuit_korean_name: null,
+      circuit_english_name: 'Circuit Park Zandvoort',
+      circuit_region_name: 'Netherlands',
+      circuit_image_id: null,
+      circuit_laps: null,
+      circuit_one_lap_length: null,
+      circuit_total_length: null,
+    },
+  },
+  13: {
+    schedule: [
+      { session_code: 'FP1', time: '2026-09-04T10:30:00' },
+      { session_code: 'FP2', time: '2026-09-04T14:00:00' },
+      { session_code: 'FP3', time: '2026-09-05T10:30:00' },
+      { session_code: 'Q', time: '2026-09-05T14:00:00' },
+      { session_code: 'R', time: '2026-09-06T13:00:00' },
+    ],
+    weather: [
+      { session_code: 'FP1', temperature: null, rainfall: null },
+      { session_code: 'FP2', temperature: null, rainfall: null },
+      { session_code: 'FP3', temperature: null, rainfall: null },
+      { session_code: 'Q', temperature: null, rainfall: null },
+      { session_code: 'R', temperature: null, rainfall: null },
+    ],
+    tire: [],
+    circuit: {
+      circuit_korean_name: null,
+      circuit_english_name: 'Autodromo Nazionale di Monza',
+      circuit_region_name: 'Italy',
+      circuit_image_id: null,
+      circuit_laps: null,
+      circuit_one_lap_length: null,
+      circuit_total_length: null,
+    },
+  },
 };

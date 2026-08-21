@@ -1,9 +1,36 @@
+import type { GrandPrixSessionCode } from '@/types/grandprix';
+
 interface GrandPrixDisplay {
   koreanName: string;
   countryCode: string;
 }
 
 export const CURRENT_SEASON = 2026;
+
+export const GRAND_PRIX_SESSION_LABELS: Record<GrandPrixSessionCode, string> = {
+  FP1: '프랙티스 1',
+  FP2: '프랙티스 2',
+  FP3: '프랙티스 3',
+  Q: '퀄리파잉',
+  SQ: '스프린트 퀄리파잉',
+  S: '스프린트',
+  R: '레이스',
+};
+
+const SPRINT_SESSION_CODES: GrandPrixSessionCode[] = [
+  'FP1',
+  'SQ',
+  'S',
+  'Q',
+  'R',
+];
+const STANDARD_SESSION_CODES: GrandPrixSessionCode[] = [
+  'FP1',
+  'FP2',
+  'FP3',
+  'Q',
+  'R',
+];
 
 const GRAND_PRIX_DISPLAY_BY_NAME: Record<string, GrandPrixDisplay> = {
   'Australian Grand Prix': {
@@ -100,8 +127,67 @@ const GRAND_PRIX_DISPLAY_BY_NAME: Record<string, GrandPrixDisplay> = {
   },
 };
 
+const GRAND_PRIX_TIME_ZONE_BY_NAME: Record<string, string> = {
+  'Australian Grand Prix': 'Australia/Melbourne',
+  'Chinese Grand Prix': 'Asia/Shanghai',
+  'Japanese Grand Prix': 'Asia/Tokyo',
+  'Miami Grand Prix': 'America/New_York',
+  'Canadian Grand Prix': 'America/Toronto',
+  'Monaco Grand Prix': 'Europe/Monaco',
+  'Barcelona Grand Prix': 'Europe/Madrid',
+  'Austrian Grand Prix': 'Europe/Vienna',
+  'British Grand Prix': 'Europe/London',
+  'Belgian Grand Prix': 'Europe/Brussels',
+  'Hungarian Grand Prix': 'Europe/Budapest',
+  'Dutch Grand Prix': 'Europe/Amsterdam',
+  'Italian Grand Prix': 'Europe/Rome',
+  'Spanish Grand Prix': 'Europe/Madrid',
+  'Azerbaijan Grand Prix': 'Asia/Baku',
+  'Bahrain Grand Prix': 'Asia/Bahrain',
+  'Singapore Grand Prix': 'Asia/Singapore',
+  'United States Grand Prix': 'America/Chicago',
+  'Mexico City Grand Prix': 'America/Mexico_City',
+  'São Paulo Grand Prix': 'America/Sao_Paulo',
+  'Las Vegas Grand Prix': 'America/Los_Angeles',
+  'Qatar Grand Prix': 'Asia/Qatar',
+  'Abu Dhabi Grand Prix': 'Asia/Dubai',
+};
+
 export const getGrandPrixDisplay = (name: string): GrandPrixDisplay =>
   GRAND_PRIX_DISPLAY_BY_NAME[name] ?? {
     koreanName: name,
     countryCode: 'GP',
   };
+
+export const getGrandPrixTimeZone = (name: string): string | null =>
+  GRAND_PRIX_TIME_ZONE_BY_NAME[name] ?? null;
+
+export const getWeekendSessionCodes = (
+  isSprint: boolean
+): GrandPrixSessionCode[] => [
+  ...(isSprint ? SPRINT_SESSION_CODES : STANDARD_SESSION_CODES),
+];
+
+const CIRCUIT_KOREAN_NAME_BY_ENGLISH_NAME: Record<string, string> = {
+  'Silverstone Circuit': '실버스톤 서킷',
+};
+
+const CIRCUIT_LOCATION_BY_ENGLISH_NAME: Record<string, string> = {
+  'Silverstone Circuit': 'Silverstone, United Kingdom',
+};
+
+export const getCircuitKoreanName = (
+  englishName: string,
+  apiKoreanName: string | null
+): string =>
+  apiKoreanName ??
+  CIRCUIT_KOREAN_NAME_BY_ENGLISH_NAME[englishName] ??
+  englishName;
+
+export const getCircuitLocation = (
+  englishName: string,
+  regionName: string | null
+): string =>
+  CIRCUIT_LOCATION_BY_ENGLISH_NAME[englishName] ??
+  regionName ??
+  '위치 정보 없음';

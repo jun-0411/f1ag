@@ -1,5 +1,6 @@
 import { RootLayout } from '@/components/RootLayout';
-import GrandPrixDetail from '@/routes/GrandPrixDetail';
+import GrandPrixLayout from '@/routes/GrandPrixLayout';
+import GrandPrixOverview from '@/routes/GrandPrixOverview';
 import Home from '@/routes/Home';
 import { createBrowserRouter } from 'react-router';
 
@@ -14,7 +15,14 @@ export const router = createBrowserRouter([
       },
       {
         path: 'grandprix/:grandPrixId',
-        Component: GrandPrixDetail,
+        Component: GrandPrixLayout,
+        children: [
+          {
+            index: true,
+            Component: GrandPrixOverview,
+            handle: { grandPrixPageName: '개요' },
+          },
+        ],
       },
     ],
   },

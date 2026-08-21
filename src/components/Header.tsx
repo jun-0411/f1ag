@@ -1,8 +1,26 @@
 import { Button } from '@/components/ui/button';
+import useMobileNavigationStore from '@/stores/useMobileNavigationStore';
 import { Menu, Search } from 'lucide-react';
-import { Link } from 'react-router';
+import { Link, useMatch } from 'react-router';
 
 export function Header() {
+  const isGrandPrixRootRoute = useMatch('/grandprix/:grandPrixId');
+  const isGrandPrixNestedRoute = useMatch('/grandprix/:grandPrixId/*');
+  const isGrandPrixRoute =
+    isGrandPrixRootRoute !== null || isGrandPrixNestedRoute !== null;
+  const isMobileNavigationOpen = useMobileNavigationStore(
+    (state) => state.isOpen
+  );
+  const toggleMobileNavigation = useMobileNavigationStore(
+    (state) => state.toggle
+  );
+
+  const handleMobileMenuClick = () => {
+    if (isGrandPrixRoute) {
+      toggleMobileNavigation();
+    }
+  };
+
   return (
     <header className="sticky top-0 z-[100] h-16 w-full border-[#293241] border-b bg-[#0b0d12] text-[#f5f7fa] md:border-[#242b38]">
       <div
@@ -53,9 +71,14 @@ export function Header() {
         data-name="Mobile Header"
       >
         <Button
-          aria-label="메뉴 열기"
+          aria-controls={
+            isGrandPrixRoute ? 'mobile-grand-prix-navigation' : undefined
+          }
+          aria-expanded={isGrandPrixRoute ? isMobileNavigationOpen : undefined}
+          aria-label={isMobileNavigationOpen ? '메뉴 닫기' : '메뉴 열기'}
           className="size-11 rounded-lg border-0 bg-transparent p-0 text-[#f5f7fa] shadow-none transition-[background-color] duration-150 ease-[ease] hover:bg-[#151b25] hover:text-[#f5f7fa] focus-visible:border-transparent focus-visible:ring-0 focus-visible:outline-2 focus-visible:outline-[#4ca7ff] focus-visible:outline-offset-2 focus-visible:outline-solid active:translate-y-0 motion-reduce:transition-none"
           size="icon"
+          onClick={handleMobileMenuClick}
           type="button"
           variant="ghost"
         >

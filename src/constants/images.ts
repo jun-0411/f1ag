@@ -26,6 +26,18 @@ const NATION_FLAG_IMAGE_BY_CODE: Record<string, string> = {
   US: '/assets/flags/us.png',
 };
 
+const GRAND_PRIX_TYRE_IMAGE_BY_TYPE: Record<string, string> = {
+  HARD: '/assets/grandprix-overview/tyre-hard.svg',
+  MEDIUM: '/assets/grandprix-overview/tyre-medium.svg',
+  SOFT: '/assets/grandprix-overview/tyre-soft.svg',
+  INTERMEDIATE: '/assets/grandprix-overview/tyre-intermediate.svg',
+  WET: '/assets/grandprix-overview/tyre-wet.svg',
+};
+
+const CIRCUIT_IMAGE_BY_ID: Partial<Record<number, string>> = {
+  18: '/assets/grandprix-overview/silverstone-circuit.svg',
+};
+
 export const getWinnerImage = (driverId: number | null): string => {
   if (driverId === null) {
     return DEFAULT_WINNER_IMAGE;
@@ -37,3 +49,13 @@ export const getWinnerImage = (driverId: number | null): string => {
 
 export const getNationFlagImage = (countryCode: string): string | null =>
   NATION_FLAG_IMAGE_BY_CODE[countryCode] ?? null;
+
+export const getGrandPrixTyreImage = (
+  tireType: string | null
+): string | null =>
+  tireType === null
+    ? null
+    : (GRAND_PRIX_TYRE_IMAGE_BY_TYPE[tireType.toUpperCase()] ?? null);
+
+export const getCircuitImage = (circuitId: number): string | null =>
+  CIRCUIT_IMAGE_BY_ID[circuitId] ?? null;
