@@ -3,7 +3,7 @@ import { getNationFlagImage } from '@/constants/images';
 
 interface GrandPrixFlagProps {
   grandPrixName: string;
-  size?: 'small' | 'large';
+  size?: 'small' | 'large' | 'overview';
 }
 
 export default function GrandPrixFlag({
@@ -13,7 +13,12 @@ export default function GrandPrixFlag({
   const display = getGrandPrixDisplay(grandPrixName);
   const imagePath = getNationFlagImage(display.countryCode);
   const isSmall = size === 'small';
-  const sizeClass = isSmall ? 'h-7 w-[42px]' : 'h-[30px] w-[46px]';
+  const isOverview = size === 'overview';
+  const sizeClass = isOverview
+    ? 'h-[27px] w-[42px] min-[1400px]:h-[50px] min-[1400px]:w-[78px]'
+    : isSmall
+      ? 'h-7 w-[42px]'
+      : 'h-[30px] w-[46px]';
 
   if (imagePath === null) {
     return (
@@ -31,9 +36,9 @@ export default function GrandPrixFlag({
       <img
         alt={`${display.countryCode} 국기`}
         className="size-full object-cover"
-        height={isSmall ? 28 : 30}
+        height={isOverview ? 50 : isSmall ? 28 : 30}
         src={imagePath}
-        width={isSmall ? 42 : 46}
+        width={isOverview ? 78 : isSmall ? 42 : 46}
       />
     </span>
   );
