@@ -2,6 +2,8 @@ import apiClient from '@/api/apiClient';
 import type {
   GrandPrixListRequest,
   GrandPrixListResponse,
+  GrandPrixOverviewResponse,
+  GrandPrixResponse,
 } from '@/types/grandprix';
 
 export const getGrandPrixList = async (
@@ -10,6 +12,26 @@ export const getGrandPrixList = async (
   const response = await apiClient.get<GrandPrixListResponse>('/grandprix', {
     params: request,
   });
+
+  return response.data;
+};
+
+export const getGrandPrix = async (
+  grandPrixId: number
+): Promise<GrandPrixResponse> => {
+  const response = await apiClient.get<GrandPrixResponse>(
+    `/grandprix/${grandPrixId}`
+  );
+
+  return response.data;
+};
+
+export const getGrandPrixOverview = async (
+  grandPrixId: number
+): Promise<GrandPrixOverviewResponse> => {
+  const response = await apiClient.get<GrandPrixOverviewResponse>(
+    `/grandprix/${grandPrixId}/overview`
+  );
 
   return response.data;
 };
