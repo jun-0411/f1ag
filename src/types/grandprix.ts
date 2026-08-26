@@ -69,3 +69,24 @@ export interface GrandPrixOverviewResponse {
   tire: GrandPrixTireOverviewItem[];
   circuit: GrandPrixCircuitOverview;
 }
+
+export interface GrandPrixResultDriver {
+  driver_id: number;
+  name: string;
+  teamname: string;
+  team_image_id: number | null;
+  points: number | null;
+  rank_change: number;
+  racetime: string | null;
+}
+
+export interface GrandPrixDriverOfTheDay {
+  driver_id: number;
+  dotd_image_id: number | null;
+  starting_grid: number | null;
+}
+
+export interface GrandPrixResultResponse {
+  driver: GrandPrixResultDriver[];
+  dotd: GrandPrixDriverOfTheDay | null;
+}
