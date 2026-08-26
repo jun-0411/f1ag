@@ -3,6 +3,7 @@ import {
   grandPrixDetailMockById,
   grandPrixListMock,
   grandPrixOverviewMockById,
+  grandPrixResultMockById,
 } from '@/mocks/db/grandprix';
 import type { ApiErrorResponse } from '@/types/api';
 import { http, HttpResponse } from 'msw';
@@ -49,6 +50,27 @@ const parseGrandPrixId = (
 };
 
 export const grandPrixHandlers = [
+  http.get('*/api/grandprix/:grandPrixId/result', ({ params }) => {
+    const grandPrixIdParameter = params.grandPrixId;
+    const grandPrixId = parseGrandPrixId(grandPrixIdParameter);
+
+    if (grandPrixId === null) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createGrandPrixIdValidationError(String(grandPrixIdParameter)),
+        { status: 422 }
+      );
+    }
+
+    const result = grandPrixResultMockById[grandPrixId];
+    if (result === undefined) {
+      return HttpResponse.json<ApiErrorResponse>(
+        { detail: `Grand Prix ${grandPrixId} result not found` },
+        { status: 404 }
+      );
+    }
+
+    return HttpResponse.json(result);
+  }),
   http.get('*/api/grandprix/:grandPrixId/overview', ({ params }) => {
     const grandPrixIdParameter = params.grandPrixId;
     const grandPrixId = parseGrandPrixId(grandPrixIdParameter);
