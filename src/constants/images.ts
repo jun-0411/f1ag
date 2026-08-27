@@ -38,6 +38,10 @@ const CIRCUIT_IMAGE_BY_ID: Partial<Record<number, string>> = {
   18: '/assets/grandprix-overview/silverstone-circuit.svg',
 };
 
+const DRIVER_OF_THE_DAY_IMAGE_BY_DRIVER_ID: Partial<Record<number, string>> = {
+  15: '/assets/grandprix-results/driver-of-the-day-lewis-hamilton.jpg',
+};
+
 export const getWinnerImage = (driverId: number | null): string => {
   if (driverId === null) {
     return DEFAULT_WINNER_IMAGE;
@@ -59,3 +63,7 @@ export const getGrandPrixTyreImage = (
 
 export const getCircuitImage = (circuitId: number): string | null =>
   CIRCUIT_IMAGE_BY_ID[circuitId] ?? null;
+
+export const getDriverOfTheDayImage = (driverId: number): string | null =>
+  // 이미지 조회 API가 준비되기 전까지만 Figma 원본을 임시 매핑한다.
+  DRIVER_OF_THE_DAY_IMAGE_BY_DRIVER_ID[driverId] ?? null;

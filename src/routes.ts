@@ -1,6 +1,7 @@
 import { RootLayout } from '@/components/RootLayout';
 import GrandPrixLayout from '@/routes/GrandPrixLayout';
 import GrandPrixOverview from '@/routes/GrandPrixOverview';
+import GrandPrixResults from '@/routes/GrandPrixResults';
 import Home from '@/routes/Home';
 import { createBrowserRouter } from 'react-router';
 
@@ -21,6 +22,11 @@ export const router = createBrowserRouter([
             index: true,
             Component: GrandPrixOverview,
             handle: { grandPrixPageName: '개요' },
+          },
+          {
+            path: 'result',
+            Component: GrandPrixResults,
+            handle: { grandPrixPageName: '결과' },
           },
         ],
       },

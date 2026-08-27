@@ -19,6 +19,11 @@ export const createGrandPrixNavigationItems = (
     to: `/grandprix/${grandPrixId}`,
   },
   {
+    label: '결과',
+    pageName: '결과',
+    to: `/grandprix/${grandPrixId}/result`,
+  },
+  {
     label: '레이스 히스토리',
     pageName: '레이스 히스토리',
     to: `/grandprix/${grandPrixId}/history`,

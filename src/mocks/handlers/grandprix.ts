@@ -3,8 +3,10 @@ import {
   grandPrixDetailMockById,
   grandPrixListMock,
   grandPrixOverviewMockById,
+  grandPrixResultMockById,
 } from '@/mocks/db/grandprix';
 import type { ApiErrorResponse } from '@/types/api';
+import type { GrandPrixResultSession } from '@/types/grandprix';
 import { http, HttpResponse } from 'msw';
 
 const MIN_SEASON = 1950;
@@ -38,6 +40,20 @@ const createGrandPrixIdValidationError = (input: string): ApiErrorResponse => ({
   ],
 });
 
+const createResultSessionValidationError = (
+  input: string
+): ApiErrorResponse => ({
+  detail: [
+    {
+      type: 'enum',
+      loc: ['query', 'session'],
+      msg: "Input should be 'R' or 'S'",
+      input,
+      ctx: { expected: "'R' or 'S'" },
+    },
+  ],
+});
+
 const parseGrandPrixId = (
   parameter: string | readonly string[] | undefined
 ): number | null => {
@@ -48,7 +64,51 @@ const parseGrandPrixId = (
   return Number(parameter);
 };
 
+const parseResultSession = (
+  parameter: string
+): GrandPrixResultSession | null => {
+  if (parameter === 'R' || parameter === 'S') {
+    return parameter;
+  }
+
+  return null;
+};
+
 export const grandPrixHandlers = [
+  http.get('*/api/grandprix/:grandPrixId/result', ({ params, request }) => {
+    const grandPrixIdParameter = params.grandPrixId;
+    const grandPrixId = parseGrandPrixId(grandPrixIdParameter);
+
+    if (grandPrixId === null) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createGrandPrixIdValidationError(String(grandPrixIdParameter)),
+        { status: 422 }
+      );
+    }
+
+    const requestUrl = new URL(request.url);
+    const sessionParameter = requestUrl.searchParams.get('session') ?? 'R';
+    const session = parseResultSession(sessionParameter);
+
+    if (session === null) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createResultSessionValidationError(sessionParameter),
+        { status: 422 }
+      );
+    }
+
+    const result = grandPrixResultMockById[grandPrixId]?.[session];
+    if (result === undefined) {
+      return HttpResponse.json<ApiErrorResponse>(
+        {
+          detail: `Grand Prix ${grandPrixId} ${session} result not found`,
+        },
+        { status: 404 }
+      );
+    }
+
+    return HttpResponse.json(result);
+  }),
   http.get('*/api/grandprix/:grandPrixId/overview', ({ params }) => {
     const grandPrixIdParameter = params.grandPrixId;
     const grandPrixId = parseGrandPrixId(grandPrixIdParameter);
