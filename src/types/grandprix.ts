@@ -70,11 +70,14 @@ export interface GrandPrixOverviewResponse {
   circuit: GrandPrixCircuitOverview;
 }
 
+export type GrandPrixResultSession = 'R' | 'S';
+
 export interface GrandPrixResultDriver {
   driver_id: number;
   name: string;
   teamname: string;
   team_image_id: number | null;
+  position: number | null;
   points: number | null;
   rank_change: number;
   racetime: string | null;
