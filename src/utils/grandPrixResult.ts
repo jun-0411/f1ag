@@ -8,6 +8,8 @@ interface RankChangeDisplay {
   tone: 'positive' | 'negative' | 'neutral';
 }
 
+const UNFINISHED_RACE_TIMES = new Set(['DNF', 'DNS', 'DNQ', 'DSQ']);
+
 export const getDriverInitials = (name: string): string => {
   const nameParts = name.trim().split(/\s+/).filter(Boolean);
 
@@ -33,10 +35,10 @@ export const splitDriverName = (name: string): DriverNameParts => {
 
 export const formatRaceTime = (
   raceTime: string | null,
-  position: number
+  position: number | null
 ): string => {
   if (raceTime === null || raceTime.trim() === '') {
-    // 완주 상태 필드가 추가되기 전에는 null만으로 DNF·DNS·실격을 추정하지 않는다.
+    // 기록이 없는 경우 상태명을 임의로 만들지 않고 빈 기록으로만 표시한다.
     return '—';
   }
 
@@ -51,6 +53,18 @@ export const formatRaceTime = (
   const gap = raceTime.slice(2).replace(/^0(?=\d\.)/, '');
 
   return `+${gap}`;
+};
+
+export const getPositionLabel = (position: number | null): string =>
+  position === null ? 'NC' : String(position);
+
+export const isUnfinishedResult = (raceTime: string | null): boolean => {
+  if (raceTime === null) {
+    // 백엔드가 기록을 제공하지 않은 결과도 미완주와 같은 흐림 상태로 표시한다.
+    return true;
+  }
+
+  return UNFINISHED_RACE_TIMES.has(raceTime.trim().toUpperCase());
 };
 
 export const formatPoints = (points: number | null): string => {

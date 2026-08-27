@@ -23,12 +23,10 @@ const getPositionChangeLabel = (positionChange: number): string => {
 };
 
 export default function DriverOfTheDay({ dotd, drivers }: DriverOfTheDayProps) {
-  const driverIndex =
+  const driver =
     dotd === null
-      ? -1
-      : drivers.findIndex((driver) => driver.driver_id === dotd.driver_id);
-  const finalPosition = driverIndex + 1;
-  const driver = driverIndex < 0 ? undefined : drivers[driverIndex];
+      ? undefined
+      : drivers.find((item) => item.driver_id === dotd.driver_id);
 
   return (
     <section className="min-[1400px]:h-[512px] min-[1400px]:rounded-[22px] min-[1400px]:border min-[1400px]:border-grand-prix-border min-[1400px]:bg-grand-prix-card min-[1400px]:p-6">
@@ -46,7 +44,7 @@ export default function DriverOfTheDay({ dotd, drivers }: DriverOfTheDayProps) {
       ) : (
         <DriverOfTheDayVisual
           driver={driver}
-          finalPosition={finalPosition}
+          finalPosition={driver.position}
           startingGrid={dotd.starting_grid}
         />
       )}
@@ -56,7 +54,7 @@ export default function DriverOfTheDay({ dotd, drivers }: DriverOfTheDayProps) {
 
 interface DriverOfTheDayVisualProps {
   driver: GrandPrixResultDriver;
-  finalPosition: number;
+  finalPosition: number | null;
   startingGrid: number | null;
 }
 
@@ -68,7 +66,9 @@ function DriverOfTheDayVisual({
   const image = getDriverOfTheDayImage(driver.driver_id);
   const name = splitDriverName(driver.name);
   const positionChange =
-    startingGrid === null ? null : startingGrid - finalPosition;
+    startingGrid === null || finalPosition === null
+      ? null
+      : startingGrid - finalPosition;
 
   return (
     <div className="relative mt-4 h-[250px] overflow-hidden rounded-[14px] border border-grand-prix-border-mobile bg-grand-prix-deep min-[1400px]:mt-5 min-[1400px]:h-[388px] min-[1400px]:rounded-2xl min-[1400px]:border-0">
@@ -102,7 +102,7 @@ function DriverOfTheDayVisual({
               →
             </span>
             <span className="text-lg min-[1400px]:text-2xl">
-              P{finalPosition}
+              {finalPosition === null ? 'NC' : `P${finalPosition}`}
             </span>
           </div>
           {positionChange === null ? null : (

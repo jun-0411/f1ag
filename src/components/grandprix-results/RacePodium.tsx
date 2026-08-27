@@ -1,8 +1,12 @@
-import type { GrandPrixResultDriver } from '@/types/grandprix';
+import type {
+  GrandPrixResultDriver,
+  GrandPrixResultSession,
+} from '@/types/grandprix';
 import { formatRaceTime, getDriverInitials } from '@/utils/grandPrixResult';
 
 interface RacePodiumProps {
   drivers: GrandPrixResultDriver[];
+  session: GrandPrixResultSession;
 }
 
 interface PodiumStyle {
@@ -32,11 +36,11 @@ const PODIUM_STYLES: Record<1 | 2 | 3, PodiumStyle> = {
 
 const PODIUM_ORDER = [2, 1, 3] as const;
 
-export default function RacePodium({ drivers }: RacePodiumProps) {
+export default function RacePodium({ drivers, session }: RacePodiumProps) {
   return (
     <section className="min-[1400px]:h-[430px] min-[1400px]:rounded-[22px] min-[1400px]:border min-[1400px]:border-grand-prix-border min-[1400px]:bg-grand-prix-card min-[1400px]:p-6">
       <p className="text-[9px] font-bold text-grand-prix-primary uppercase min-[1400px]:text-[11px]">
-        Race Podium
+        {session === 'R' ? 'Race Podium' : 'Sprint Podium'}
       </p>
       <h2 className="mt-1 text-xl font-bold text-grand-prix-text min-[1400px]:text-2xl">
         포디엄
@@ -44,7 +48,7 @@ export default function RacePodium({ drivers }: RacePodiumProps) {
 
       <div className="mt-4 grid h-[222px] grid-cols-3 items-end gap-2 rounded-[14px] border border-grand-prix-border-mobile bg-grand-prix-card-mobile p-[11px] pb-5 min-[1400px]:mt-[34px] min-[1400px]:h-[272px] min-[1400px]:grid-cols-[182px_202px_182px] min-[1400px]:gap-[18px] min-[1400px]:border-0 min-[1400px]:bg-transparent min-[1400px]:p-0">
         {PODIUM_ORDER.map((position) => {
-          const driver = drivers[position - 1];
+          const driver = drivers.find((item) => item.position === position);
 
           if (driver === undefined) {
             return <div aria-hidden="true" key={position} />;
@@ -90,7 +94,7 @@ export default function RacePodium({ drivers }: RacePodiumProps) {
                       : 'mt-[6px]'
                 }`}
               >
-                {formatRaceTime(driver.racetime, position)}
+                {formatRaceTime(driver.racetime, driver.position)}
               </p>
             </article>
           );

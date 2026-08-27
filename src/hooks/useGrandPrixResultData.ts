@@ -1,10 +1,14 @@
 import { getGrandPrixResult } from '@/api/grandprix/grandprix';
+import type { GrandPrixResultSession } from '@/types/grandprix';
 import { useQuery } from '@tanstack/react-query';
 
-export default function useGrandPrixResultData(grandPrixId: number) {
+export default function useGrandPrixResultData(
+  grandPrixId: number,
+  session: GrandPrixResultSession
+) {
   const resultQuery = useQuery({
-    queryKey: ['grandprix', 'result', grandPrixId],
-    queryFn: () => getGrandPrixResult(grandPrixId),
+    queryKey: ['grandprix', 'result', grandPrixId, session],
+    queryFn: () => getGrandPrixResult(grandPrixId, session),
   });
 
   return {

@@ -1,11 +1,16 @@
 import { Button } from '@/components/ui/button';
 import { getTeamDisplay } from '@/constants/teams';
-import type { GrandPrixResultDriver } from '@/types/grandprix';
+import type {
+  GrandPrixResultDriver,
+  GrandPrixResultSession,
+} from '@/types/grandprix';
 import { cn } from '@/utils/cn';
 import {
   formatPoints,
   formatRaceTime,
+  getPositionLabel,
   getRankChangeDisplay,
+  isUnfinishedResult,
 } from '@/utils/grandPrixResult';
 import { ArrowRight, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
@@ -13,15 +18,16 @@ import { useState } from 'react';
 interface FinalClassificationProps {
   drivers: GrandPrixResultDriver[];
   isSprint: boolean;
+  onSessionChange: (session: GrandPrixResultSession) => void;
+  session: GrandPrixResultSession;
 }
-
-type ResultView = 'race' | 'sprint';
 
 export default function FinalClassification({
   drivers,
   isSprint,
+  onSessionChange,
+  session,
 }: FinalClassificationProps) {
-  const [resultView, setResultView] = useState<ResultView>('race');
   const [isExpanded, setIsExpanded] = useState(false);
   const initialVisibleCount = Math.ceil(drivers.length / 2);
   const mobileDrivers = isExpanded
@@ -46,8 +52,8 @@ export default function FinalClassification({
             className="flex h-[34px] overflow-hidden rounded-[10px] border border-grand-prix-border bg-grand-prix-row"
             role="group"
           >
-            {(['race', 'sprint'] as const).map((view) => {
-              const isActive = resultView === view;
+            {(['R', 'S'] as const).map((sessionOption) => {
+              const isActive = session === sessionOption;
 
               return (
                 <Button
@@ -58,12 +64,12 @@ export default function FinalClassification({
                       ? 'bg-grand-prix-active text-grand-prix-primary hover:bg-grand-prix-active'
                       : 'text-grand-prix-muted hover:bg-grand-prix-row hover:text-grand-prix-text'
                   )}
-                  key={view}
-                  onClick={() => setResultView(view)}
+                  key={sessionOption}
+                  onClick={() => onSessionChange(sessionOption)}
                   type="button"
                   variant="ghost"
                 >
-                  {view === 'race' ? '레이스' : '스프린트'}
+                  {sessionOption === 'R' ? '레이스' : '스프린트'}
                 </Button>
               );
             })}
@@ -71,64 +77,55 @@ export default function FinalClassification({
         ) : null}
       </div>
 
-      {resultView === 'sprint' ? (
-        <div className="mt-5 flex min-h-64 items-center justify-center rounded-[14px] border border-grand-prix-border-mobile bg-grand-prix-card-mobile px-6 text-center text-sm text-grand-prix-muted-mobile min-[1400px]:min-h-[760px] min-[1400px]:border-0 min-[1400px]:bg-grand-prix-row/40">
-          스프린트 결과는 추후 추가될 예정입니다.
-        </div>
-      ) : (
-        <>
-          <DesktopResultTable drivers={drivers} />
-          <div
-            className="mt-4 space-y-[6px] min-[1400px]:hidden"
-            id="mobile-grand-prix-results"
-          >
-            {mobileDrivers.map((driver, index) => (
-              <MobileResultRow
-                driver={driver}
-                key={driver.driver_id}
-                position={index + 1}
-              />
-            ))}
-          </div>
+      <DesktopResultTable drivers={drivers} session={session} />
+      <div
+        className="mt-4 space-y-[6px] min-[1400px]:hidden"
+        id="mobile-grand-prix-results"
+      >
+        {mobileDrivers.map((driver) => (
+          <MobileResultRow driver={driver} key={driver.driver_id} />
+        ))}
+      </div>
 
-          {drivers.length > initialVisibleCount ? (
-            <Button
-              aria-controls="mobile-grand-prix-results"
-              aria-expanded={isExpanded}
-              className="mt-4 h-11 w-full rounded-[11px] border border-grand-prix-border-mobile bg-grand-prix-row text-[11px] font-bold text-grand-prix-text shadow-none hover:bg-grand-prix-border-mobile min-[1400px]:hidden"
-              onClick={() => setIsExpanded((current) => !current)}
-              type="button"
-              variant="outline"
-            >
-              {isExpanded ? '결과 접기' : `전체 ${drivers.length}명 결과 보기`}
-              {isExpanded ? (
-                <ChevronUp
-                  aria-hidden="true"
-                  className="ml-auto size-4 text-grand-prix-primary"
-                />
-              ) : (
-                <ArrowRight
-                  aria-hidden="true"
-                  className="ml-auto size-4 text-grand-prix-primary"
-                />
-              )}
-            </Button>
-          ) : null}
-        </>
-      )}
+      {drivers.length > initialVisibleCount ? (
+        <Button
+          aria-controls="mobile-grand-prix-results"
+          aria-expanded={isExpanded}
+          className="mt-4 h-11 w-full rounded-[11px] border border-grand-prix-border-mobile bg-grand-prix-row text-[11px] font-bold text-grand-prix-text shadow-none hover:bg-grand-prix-border-mobile min-[1400px]:hidden"
+          onClick={() => setIsExpanded((current) => !current)}
+          type="button"
+          variant="outline"
+        >
+          {isExpanded ? '결과 접기' : `전체 ${drivers.length}명 결과 보기`}
+          {isExpanded ? (
+            <ChevronUp
+              aria-hidden="true"
+              className="ml-auto size-4 text-grand-prix-primary"
+            />
+          ) : (
+            <ArrowRight
+              aria-hidden="true"
+              className="ml-auto size-4 text-grand-prix-primary"
+            />
+          )}
+        </Button>
+      ) : null}
     </section>
   );
 }
 
 interface ResultListProps {
   drivers: GrandPrixResultDriver[];
+  session: GrandPrixResultSession;
 }
 
-function DesktopResultTable({ drivers }: ResultListProps) {
+function DesktopResultTable({ drivers, session }: ResultListProps) {
   return (
     <div className="mt-6 hidden min-[1400px]:block">
       <table className="w-full table-fixed text-left">
-        <caption className="sr-only">레이스 최종 순위</caption>
+        <caption className="sr-only">
+          {session === 'R' ? '레이스' : '스프린트'} 최종 순위
+        </caption>
         <colgroup>
           <col className="w-[44px]" />
           <col className="w-[44px]" />
@@ -148,25 +145,29 @@ function DesktopResultTable({ drivers }: ResultListProps) {
           </tr>
         </thead>
         <tbody>
-          {drivers.map((driver, index) => {
-            const position = index + 1;
+          {drivers.map((driver) => {
+            const positionLabel = getPositionLabel(driver.position);
             const team = getTeamDisplay(driver.teamname);
             const rankChange = getRankChangeDisplay(driver.rank_change);
+            const isUnfinished = isUnfinishedResult(driver.racetime);
 
             return (
               <tr
-                className="h-10 odd:bg-grand-prix-row even:bg-grand-prix-card"
+                className={cn(
+                  'h-10 odd:bg-grand-prix-row even:bg-grand-prix-card',
+                  isUnfinished && 'opacity-45'
+                )}
                 key={driver.driver_id}
               >
                 <td
                   className={cn(
                     'rounded-l-[9px] pl-2 text-xs font-bold',
-                    position <= 3
+                    driver.position !== null && driver.position <= 3
                       ? 'text-grand-prix-primary'
                       : 'text-grand-prix-text'
                   )}
                 >
-                  {position}
+                  {positionLabel}
                 </td>
                 <td>
                   <span
@@ -180,7 +181,7 @@ function DesktopResultTable({ drivers }: ResultListProps) {
                   {driver.name}
                 </td>
                 <td className="truncate pr-2 text-[11px] font-bold text-grand-prix-text">
-                  {formatRaceTime(driver.racetime, position)}
+                  {formatRaceTime(driver.racetime, driver.position)}
                 </td>
                 <td className="text-center text-[11px] font-bold text-grand-prix-text">
                   {formatPoints(driver.points)}
@@ -206,21 +207,28 @@ function DesktopResultTable({ drivers }: ResultListProps) {
 
 interface MobileResultRowProps {
   driver: GrandPrixResultDriver;
-  position: number;
 }
 
-function MobileResultRow({ driver, position }: MobileResultRowProps) {
+function MobileResultRow({ driver }: MobileResultRowProps) {
   const team = getTeamDisplay(driver.teamname);
+  const isUnfinished = isUnfinishedResult(driver.racetime);
 
   return (
-    <article className="grid h-14 grid-cols-[25px_minmax(0,1fr)_82px_30px] items-center rounded-[13px] border border-grand-prix-border-mobile bg-grand-prix-card-mobile px-2">
+    <article
+      className={cn(
+        'grid h-14 grid-cols-[25px_minmax(0,1fr)_82px_30px] items-center rounded-[13px] border border-grand-prix-border-mobile bg-grand-prix-card-mobile px-2',
+        isUnfinished && 'opacity-45'
+      )}
+    >
       <p
         className={cn(
           'text-xs font-bold',
-          position <= 3 ? 'text-grand-prix-primary' : 'text-grand-prix-text'
+          driver.position !== null && driver.position <= 3
+            ? 'text-grand-prix-primary'
+            : 'text-grand-prix-text'
         )}
       >
-        {position}
+        {getPositionLabel(driver.position)}
       </p>
       <div
         className="flex h-10 min-w-0 items-center gap-2 rounded-lg px-2"
@@ -239,7 +247,7 @@ function MobileResultRow({ driver, position }: MobileResultRowProps) {
         </h3>
       </div>
       <p className="truncate pl-2 text-[10px] font-bold text-grand-prix-muted-mobile">
-        {formatRaceTime(driver.racetime, position)}
+        {formatRaceTime(driver.racetime, driver.position)}
       </p>
       <p
         className={cn(
