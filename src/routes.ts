@@ -55,6 +55,14 @@ export const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: 'circuit/:circuitId',
+        lazy: async () => {
+          const { default: Component } = await import('@/routes/CircuitDetail');
+
+          return { Component };
+        },
+      },
     ],
   },
 ]);
