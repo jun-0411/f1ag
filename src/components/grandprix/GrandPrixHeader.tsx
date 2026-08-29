@@ -5,11 +5,13 @@ import { Link } from 'react-router';
 
 interface GrandPrixHeaderProps {
   grandPrix: GrandPrixResponse;
+  mobilePageName?: string;
   pageName: string;
 }
 
 export default function GrandPrixHeader({
   grandPrix,
+  mobilePageName,
   pageName,
 }: GrandPrixHeaderProps) {
   const display = getGrandPrixDisplay(grandPrix.name);
@@ -20,7 +22,20 @@ export default function GrandPrixHeader({
         <GrandPrixFlag grandPrixName={grandPrix.name} size="overview" />
         <div className="min-w-0">
           <h1 className="truncate text-[22px] leading-tight font-bold text-grand-prix-text min-[1400px]:text-[40px]">
-            {CURRENT_SEASON} {display.koreanName} {pageName}
+            <span
+              className={
+                mobilePageName === undefined
+                  ? undefined
+                  : 'hidden min-[1400px]:inline'
+              }
+            >
+              {CURRENT_SEASON} {display.koreanName} {pageName}
+            </span>
+            {mobilePageName === undefined ? null : (
+              <span className="min-[1400px]:hidden">
+                {CURRENT_SEASON} {display.koreanName} {mobilePageName}
+              </span>
+            )}
           </h1>
           <div className="mt-2 hidden items-center text-sm font-bold tracking-[-0.01em] text-grand-prix-primary uppercase min-[1400px]:flex">
             <Link

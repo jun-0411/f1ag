@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import { Outlet, type UIMatch, useMatches, useParams } from 'react-router';
 
 interface GrandPrixRouteHandle {
+  grandPrixMobilePageName?: string;
   grandPrixPageName?: string;
 }
 
@@ -28,6 +29,18 @@ const getGrandPrixPageName = (matches: UIMatch[]): string => {
   }
 
   return '';
+};
+
+const getGrandPrixMobilePageName = (matches: UIMatch[]): string | undefined => {
+  for (const match of [...matches].reverse()) {
+    const handle = match.handle as GrandPrixRouteHandle | undefined;
+
+    if (handle?.grandPrixMobilePageName !== undefined) {
+      return handle.grandPrixMobilePageName;
+    }
+  }
+
+  return undefined;
 };
 
 export default function GrandPrixLayout() {
@@ -59,6 +72,7 @@ export default function GrandPrixLayout() {
   }
 
   const pageName = getGrandPrixPageName(matches);
+  const mobilePageName = getGrandPrixMobilePageName(matches);
 
   return (
     <>
@@ -77,7 +91,11 @@ export default function GrandPrixLayout() {
           />
 
           <main className="min-w-0">
-            <GrandPrixHeader grandPrix={grandPrix} pageName={pageName} />
+            <GrandPrixHeader
+              grandPrix={grandPrix}
+              mobilePageName={mobilePageName}
+              pageName={pageName}
+            />
             <Outlet context={{ grandPrixId, grandPrix }} />
           </main>
         </div>
