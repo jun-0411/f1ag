@@ -42,6 +42,17 @@ export const router = createBrowserRouter([
               grandPrixMobilePageName: '히스토리',
             },
           },
+          {
+            path: 'session/:sessionCode',
+            lazy: async () => {
+              const { default: Component } = await import(
+                '@/routes/GrandPrixSessionDetail'
+              );
+
+              return { Component };
+            },
+            handle: { grandPrixSessionPage: true },
+          },
         ],
       },
     ],

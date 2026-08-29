@@ -71,6 +71,11 @@
   --grand-prix-muted: #98a2b3;
   --grand-prix-muted-mobile: #8e99aa;
   --grand-prix-unit: #6f7a8d;
+  --grand-prix-success: #35d39a;
+  --grand-prix-performance: #a78bfa;
+  --grand-prix-tooltip: #1c2431;
+  --grand-prix-tooltip-border: #46536a;
+  --grand-prix-tooltip-text: #b9c2d0;
 }
 
 html {
@@ -153,6 +158,11 @@ body {
   --color-grand-prix-muted: var(--grand-prix-muted);
   --color-grand-prix-muted-mobile: var(--grand-prix-muted-mobile);
   --color-grand-prix-unit: var(--grand-prix-unit);
+  --color-grand-prix-success: var(--grand-prix-success);
+  --color-grand-prix-performance: var(--grand-prix-performance);
+  --color-grand-prix-tooltip: var(--grand-prix-tooltip);
+  --color-grand-prix-tooltip-border: var(--grand-prix-tooltip-border);
+  --color-grand-prix-tooltip-text: var(--grand-prix-tooltip-text);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);

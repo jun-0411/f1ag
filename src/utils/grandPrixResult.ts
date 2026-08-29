@@ -8,7 +8,7 @@ interface RankChangeDisplay {
   tone: 'positive' | 'negative' | 'neutral';
 }
 
-const UNFINISHED_RACE_TIMES = new Set(['DNF', 'DNS', 'DNQ', 'DSQ']);
+const RACE_STATUS_RESULTS = new Set(['DNF', 'DNS', 'DNQ', 'DSQ']);
 
 export const getDriverInitials = (name: string): string => {
   const nameParts = name.trim().split(/\s+/).filter(Boolean);
@@ -58,13 +58,16 @@ export const formatRaceTime = (
 export const getPositionLabel = (position: number | null): string =>
   position === null ? 'NC' : String(position);
 
+export const isRaceStatusResult = (raceTime: string | null): boolean =>
+  raceTime !== null && RACE_STATUS_RESULTS.has(raceTime.trim().toUpperCase());
+
 export const isUnfinishedResult = (raceTime: string | null): boolean => {
   if (raceTime === null) {
     // 백엔드가 기록을 제공하지 않은 결과도 미완주와 같은 흐림 상태로 표시한다.
     return true;
   }
 
-  return UNFINISHED_RACE_TIMES.has(raceTime.trim().toUpperCase());
+  return isRaceStatusResult(raceTime);
 };
 
 export const formatPoints = (points: number | null): string => {
