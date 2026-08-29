@@ -17,6 +17,15 @@ export const GRAND_PRIX_SESSION_LABELS: Record<GrandPrixSessionCode, string> = {
   R: '레이스',
 };
 
+const GRAND_PRIX_SESSION_CODE_SET = new Set<string>(
+  Object.keys(GRAND_PRIX_SESSION_LABELS)
+);
+
+export const isGrandPrixSessionCode = (
+  value: string | undefined
+): value is GrandPrixSessionCode =>
+  value !== undefined && GRAND_PRIX_SESSION_CODE_SET.has(value);
+
 const SPRINT_SESSION_CODES: GrandPrixSessionCode[] = [
   'FP1',
   'SQ',

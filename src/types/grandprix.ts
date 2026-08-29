@@ -127,3 +127,32 @@ export interface GrandPrixHistoryResponse {
   flags: GrandPrixHistoryFlag[];
   driver: GrandPrixHistoryDriver[];
 }
+
+export interface GrandPrixDetailTireStint {
+  tire_type: string | null;
+  startlap: number;
+  endlap: number;
+}
+
+export interface GrandPrixDetailDriver {
+  driver_id: number;
+  name: string;
+  team_image_id: number | null;
+  team_color: string | null;
+  racetime: string | null;
+  position: number | null;
+  fastestlap: string | null;
+  speedtrap: number | null;
+  is_completed: boolean;
+  tire: GrandPrixDetailTireStint[];
+  theoretical_lap_time: string | null;
+  sector1_time: string | null;
+  sector2_time: string | null;
+  sector3_time: string | null;
+  lap_amount: number | null;
+  points: number | null;
+}
+
+export interface GrandPrixDetailResponse {
+  driver: GrandPrixDetailDriver[];
+}

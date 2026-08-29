@@ -1,5 +1,6 @@
 import apiClient from '@/api/apiClient';
 import type {
+  GrandPrixDetailResponse,
   GrandPrixHistoryResponse,
   GrandPrixListRequest,
   GrandPrixListResponse,
@@ -58,6 +59,18 @@ export const getGrandPrixHistory = async (
 ): Promise<GrandPrixHistoryResponse> => {
   const response = await apiClient.get<GrandPrixHistoryResponse>(
     `/grandprix/${grandPrixId}/history`,
+    { params: { session } }
+  );
+
+  return response.data;
+};
+
+export const getGrandPrixDetail = async (
+  grandPrixId: number,
+  session: GrandPrixSessionCode
+): Promise<GrandPrixDetailResponse> => {
+  const response = await apiClient.get<GrandPrixDetailResponse>(
+    `/grandprix/${grandPrixId}/detail`,
     { params: { session } }
   );
 
