@@ -28,6 +28,20 @@ export const router = createBrowserRouter([
             Component: GrandPrixResults,
             handle: { grandPrixPageName: '결과' },
           },
+          {
+            path: 'history',
+            lazy: async () => {
+              const { default: Component } = await import(
+                '@/routes/GrandPrixRaceHistory'
+              );
+
+              return { Component };
+            },
+            handle: {
+              grandPrixPageName: '레이스 히스토리',
+              grandPrixMobilePageName: '히스토리',
+            },
+          },
         ],
       },
     ],
