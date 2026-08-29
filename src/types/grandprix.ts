@@ -93,3 +93,37 @@ export interface GrandPrixResultResponse {
   driver: GrandPrixResultDriver[];
   dotd: GrandPrixDriverOfTheDay | null;
 }
+
+export interface GrandPrixHistoryFlag {
+  flag_type: string;
+  startlap: number | null;
+  endlap: number | null;
+}
+
+export interface GrandPrixHistoryLap {
+  lap_number: number;
+  position: number | null;
+  laptime: string | null;
+  gaptime: number | null;
+}
+
+export interface GrandPrixHistoryTireStint {
+  tire_type: string | null;
+  startlap: number;
+  endlap: number;
+}
+
+export interface GrandPrixHistoryDriver {
+  driver_id: number;
+  name: string;
+  team: string;
+  team_image_id: number | null;
+  driver_color: string | null;
+  laps: GrandPrixHistoryLap[];
+  tire: GrandPrixHistoryTireStint[];
+}
+
+export interface GrandPrixHistoryResponse {
+  flags: GrandPrixHistoryFlag[];
+  driver: GrandPrixHistoryDriver[];
+}
