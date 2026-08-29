@@ -5,12 +5,14 @@ import { Link } from 'react-router';
 
 interface GrandPrixHeaderProps {
   grandPrix: GrandPrixResponse;
+  isSessionPage?: boolean;
   mobilePageName?: string;
   pageName: string;
 }
 
 export default function GrandPrixHeader({
   grandPrix,
+  isSessionPage = false,
   mobilePageName,
   pageName,
 }: GrandPrixHeaderProps) {
@@ -21,7 +23,9 @@ export default function GrandPrixHeader({
       <div className="flex items-center gap-3 min-[1400px]:gap-[22px]">
         <GrandPrixFlag grandPrixName={grandPrix.name} size="overview" />
         <div className="min-w-0">
-          <h1 className="truncate text-[22px] leading-tight font-bold text-grand-prix-text min-[1400px]:text-[40px]">
+          <h1
+            className={`truncate leading-tight font-bold text-grand-prix-text min-[1400px]:text-[40px] ${isSessionPage ? 'text-xl' : 'text-[22px]'}`}
+          >
             <span
               className={
                 mobilePageName === undefined
