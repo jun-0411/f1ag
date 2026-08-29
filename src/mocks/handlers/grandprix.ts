@@ -5,8 +5,12 @@ import {
   grandPrixOverviewMockById,
   grandPrixResultMockById,
 } from '@/mocks/db/grandprix';
+import { grandPrixHistoryMockById } from '@/mocks/db/grandprixHistory';
 import type { ApiErrorResponse } from '@/types/api';
-import type { GrandPrixResultSession } from '@/types/grandprix';
+import type {
+  GrandPrixResultSession,
+  GrandPrixSessionCode,
+} from '@/types/grandprix';
 import { http, HttpResponse } from 'msw';
 
 const MIN_SEASON = 1950;
@@ -54,6 +58,20 @@ const createResultSessionValidationError = (
   ],
 });
 
+const createHistorySessionValidationError = (
+  input: string
+): ApiErrorResponse => ({
+  detail: [
+    {
+      type: 'enum',
+      loc: ['query', 'session'],
+      msg: "Input should be 'FP1', 'FP2', 'FP3', 'Q', 'SQ', 'S' or 'R'",
+      input,
+      ctx: { expected: "'FP1', 'FP2', 'FP3', 'Q', 'SQ', 'S' or 'R'" },
+    },
+  ],
+});
+
 const parseGrandPrixId = (
   parameter: string | readonly string[] | undefined
 ): number | null => {
@@ -74,7 +92,54 @@ const parseResultSession = (
   return null;
 };
 
+const GRAND_PRIX_SESSION_CODES: GrandPrixSessionCode[] = [
+  'FP1',
+  'FP2',
+  'FP3',
+  'Q',
+  'SQ',
+  'S',
+  'R',
+];
+
+const parseHistorySession = (parameter: string): GrandPrixSessionCode | null =>
+  GRAND_PRIX_SESSION_CODES.find((session) => session === parameter) ?? null;
+
 export const grandPrixHandlers = [
+  http.get('*/api/grandprix/:grandPrixId/history', ({ params, request }) => {
+    const grandPrixIdParameter = params.grandPrixId;
+    const grandPrixId = parseGrandPrixId(grandPrixIdParameter);
+
+    if (grandPrixId === null) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createGrandPrixIdValidationError(String(grandPrixIdParameter)),
+        { status: 422 }
+      );
+    }
+
+    const requestUrl = new URL(request.url);
+    const sessionParameter = requestUrl.searchParams.get('session') ?? 'R';
+    const session = parseHistorySession(sessionParameter);
+
+    if (session === null) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createHistorySessionValidationError(sessionParameter),
+        { status: 422 }
+      );
+    }
+
+    const history = grandPrixHistoryMockById[grandPrixId]?.[session];
+    if (history === undefined) {
+      return HttpResponse.json<ApiErrorResponse>(
+        {
+          detail: `Grand Prix ${grandPrixId} ${session} history not found`,
+        },
+        { status: 404 }
+      );
+    }
+
+    return HttpResponse.json(history);
+  }),
   http.get('*/api/grandprix/:grandPrixId/result', ({ params, request }) => {
     const grandPrixIdParameter = params.grandPrixId;
     const grandPrixId = parseGrandPrixId(grandPrixIdParameter);
