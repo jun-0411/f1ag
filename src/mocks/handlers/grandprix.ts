@@ -5,6 +5,7 @@ import {
   grandPrixOverviewMockById,
   grandPrixResultMockById,
 } from '@/mocks/db/grandprix';
+import { grandPrixSessionDetailMockById } from '@/mocks/db/grandprixDetail';
 import { grandPrixHistoryMockById } from '@/mocks/db/grandprixHistory';
 import type { ApiErrorResponse } from '@/types/api';
 import type {
@@ -106,6 +107,38 @@ const parseHistorySession = (parameter: string): GrandPrixSessionCode | null =>
   GRAND_PRIX_SESSION_CODES.find((session) => session === parameter) ?? null;
 
 export const grandPrixHandlers = [
+  http.get('*/api/grandprix/:grandPrixId/detail', ({ params, request }) => {
+    const grandPrixIdParameter = params.grandPrixId;
+    const grandPrixId = parseGrandPrixId(grandPrixIdParameter);
+
+    if (grandPrixId === null) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createGrandPrixIdValidationError(String(grandPrixIdParameter)),
+        { status: 422 }
+      );
+    }
+
+    const requestUrl = new URL(request.url);
+    const sessionParameter = requestUrl.searchParams.get('session') ?? 'R';
+    const session = parseHistorySession(sessionParameter);
+
+    if (session === null) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createHistorySessionValidationError(sessionParameter),
+        { status: 422 }
+      );
+    }
+
+    const detail = grandPrixSessionDetailMockById[grandPrixId]?.[session];
+    if (detail === undefined) {
+      return HttpResponse.json<ApiErrorResponse>(
+        { detail: `Grand Prix ${grandPrixId} ${session} detail not found` },
+        { status: 404 }
+      );
+    }
+
+    return HttpResponse.json(detail);
+  }),
   http.get('*/api/grandprix/:grandPrixId/history', ({ params, request }) => {
     const grandPrixIdParameter = params.grandPrixId;
     const grandPrixId = parseGrandPrixId(grandPrixIdParameter);
