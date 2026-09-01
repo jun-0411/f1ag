@@ -176,27 +176,3 @@ export const getWeekendSessionCodes = (
 ): GrandPrixSessionCode[] => [
   ...(isSprint ? SPRINT_SESSION_CODES : STANDARD_SESSION_CODES),
 ];
-
-const CIRCUIT_KOREAN_NAME_BY_ENGLISH_NAME: Record<string, string> = {
-  'Silverstone Circuit': '실버스톤 서킷',
-};
-
-const CIRCUIT_LOCATION_BY_ENGLISH_NAME: Record<string, string> = {
-  'Silverstone Circuit': 'Silverstone, United Kingdom',
-};
-
-export const getCircuitKoreanName = (
-  englishName: string,
-  apiKoreanName: string | null
-): string =>
-  apiKoreanName ??
-  CIRCUIT_KOREAN_NAME_BY_ENGLISH_NAME[englishName] ??
-  englishName;
-
-export const getCircuitLocation = (
-  englishName: string,
-  regionName: string | null
-): string =>
-  CIRCUIT_LOCATION_BY_ENGLISH_NAME[englishName] ??
-  regionName ??
-  '위치 정보 없음';

@@ -1,7 +1,4 @@
-import {
-  getCircuitKoreanName,
-  getCircuitLocation,
-} from '@/constants/grandPrix';
+import { getCircuitKoreanName, getCircuitLocation } from '@/constants/circuit';
 import { getCircuitImage } from '@/constants/images';
 import type { GrandPrixCircuitOverview } from '@/types/grandprix';
 import { MapPin } from 'lucide-react';
