@@ -1,6 +1,6 @@
 import GrandPrixFlag from '@/components/home/GrandPrixFlag';
+import MediaImage from '@/components/media/MediaImage';
 import { getGrandPrixDisplay } from '@/constants/grandPrix';
-import { getWinnerImage } from '@/constants/images';
 import { getTeamDisplay } from '@/constants/teams';
 import type { ChampionshipDriverItem } from '@/types/championship';
 import type { GrandPrixListItem } from '@/types/grandprix';
@@ -10,6 +10,19 @@ interface LatestWinnerCardProps {
   grandPrix: GrandPrixListItem | null;
   winner: ChampionshipDriverItem | null;
 }
+
+const getWinnerInitials = (name: string | undefined): string => {
+  if (name === undefined) {
+    return 'F1';
+  }
+
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? '')
+    .join('');
+};
 
 export default function LatestWinnerCard({
   grandPrix,
@@ -44,7 +57,10 @@ export default function LatestWinnerCard({
       <span className="absolute inset-x-[-1px] top-[-1px] h-[5px] rounded-[3px] bg-home-primary" />
 
       <div className="flex h-[67px] items-start gap-3 px-0.5 pt-2 md:h-[92px] md:px-1 md:pt-1.5">
-        <GrandPrixFlag grandPrixName={grandPrix.name} />
+        <GrandPrixFlag
+          grandPrixName={grandPrix.name}
+          imageId={grandPrix.nation_flag_image_id}
+        />
         <div className="min-w-0">
           <p className="text-[11px] leading-4 font-bold text-home-primary">
             R-{grandPrix.round}
@@ -59,10 +75,18 @@ export default function LatestWinnerCard({
       </div>
 
       <div className="relative h-[327px] overflow-hidden rounded-[14px] border border-home-border md:h-[442px] md:rounded-2xl">
-        <img
+        <MediaImage
           alt={`${winnerName} 우승자 사진`}
           className="size-full object-cover transition-transform duration-300 group-hover:scale-[1.02] motion-reduce:transition-none"
-          src={getWinnerImage(grandPrix.first_driver_id)}
+          fallback={
+            <div
+              aria-label={`${winnerName} 우승자 이미지 준비 중`}
+              className="grid size-full place-items-center bg-home-elevated text-6xl font-bold text-home-muted/45"
+            >
+              {getWinnerInitials(winner?.name)}
+            </div>
+          }
+          imageId={grandPrix.first_driver_image_id}
         />
         <div className="absolute inset-x-0 bottom-0 h-[42%] bg-gradient-to-t from-home-page via-home-page/85 to-transparent" />
         <span className="absolute top-3 right-3 rounded-full bg-home-primary px-6 py-2 text-[10px] leading-none font-bold text-white md:hidden">
