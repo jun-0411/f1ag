@@ -1,4 +1,4 @@
-import { circuitMockById } from '@/mocks/db/circuit';
+import { circuitGrandPrixMockById, circuitMockById } from '@/mocks/db/circuit';
 import type { ApiErrorResponse } from '@/types/api';
 import { http, HttpResponse } from 'msw';
 
@@ -24,6 +24,27 @@ const parseCircuitId = (
 };
 
 export const circuitHandlers = [
+  http.get('*/api/circuit/:circuitId/grandprix', ({ params }) => {
+    const circuitIdParameter = params.circuitId;
+    const circuitId = parseCircuitId(circuitIdParameter);
+
+    if (circuitId === null) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createCircuitIdValidationError(String(circuitIdParameter)),
+        { status: 422 }
+      );
+    }
+
+    const grandPrix = circuitGrandPrixMockById[circuitId];
+    if (grandPrix === undefined) {
+      return HttpResponse.json<ApiErrorResponse>(
+        { detail: 'Circuit not found' },
+        { status: 404 }
+      );
+    }
+
+    return HttpResponse.json(grandPrix);
+  }),
   http.get('*/api/circuit/:circuitId', ({ params }) => {
     const circuitIdParameter = params.circuitId;
     const circuitId = parseCircuitId(circuitIdParameter);
