@@ -31,7 +31,7 @@ export const grandPrixListMock: GrandPrixListResponse = {
       round: 9,
       nation_flag_image_id: null,
       first_driver_id: 3,
-      first_driver_image_id: null,
+      first_driver_image_id: 4,
       date: '2026-07-05T14:00:00',
     },
     {
@@ -359,7 +359,7 @@ export const grandPrixResultMockById: Record<
       ),
       dotd: {
         driver_id: 3,
-        dotd_image_id: null,
+        dotd_image_id: 4,
         starting_grid: 7,
       },
     },
@@ -571,7 +571,7 @@ export const grandPrixResultMockById: Record<
       ),
       dotd: {
         driver_id: 15,
-        dotd_image_id: null,
+        dotd_image_id: 13,
         starting_grid: 11,
       },
     },
@@ -841,7 +841,7 @@ export const grandPrixOverviewMockById: Record<
       circuit_korean_name: '실버스톤 서킷',
       circuit_english_name: 'Silverstone Circuit',
       circuit_region_name: 'UK',
-      circuit_image_id: null,
+      circuit_image_id: 42,
       circuit_laps: 52,
       circuit_one_lap_length: 5.891,
       circuit_total_length: 306.198,
