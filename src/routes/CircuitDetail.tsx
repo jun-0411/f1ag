@@ -49,11 +49,12 @@ export default function CircuitDetail() {
         <CircuitHeader
           circuitName={circuitName}
           englishName={circuit.circuit_english_name}
+          nationFlagImageId={circuit.nation_flag_image_id}
         />
 
         <div className="mt-10 grid gap-8 min-[1400px]:mt-[158px] min-[1400px]:grid-cols-[minmax(0,714px)_minmax(0,414px)] min-[1400px]:gap-6 min-[1400px]:rounded-3xl min-[1400px]:border min-[1400px]:border-grand-prix-border min-[1400px]:bg-[#121720] min-[1400px]:p-6">
           <CircuitTrackMap
-            circuitId={circuitId}
+            circuitImageId={circuit.circuit_image_id}
             circuitName={circuitName}
             englishName={circuit.circuit_english_name}
           />

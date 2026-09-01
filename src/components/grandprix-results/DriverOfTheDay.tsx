@@ -1,4 +1,4 @@
-import { getDriverOfTheDayImage } from '@/constants/images';
+import MediaImage from '@/components/media/MediaImage';
 import type {
   GrandPrixDriverOfTheDay,
   GrandPrixResultDriver,
@@ -45,6 +45,7 @@ export default function DriverOfTheDay({ dotd, drivers }: DriverOfTheDayProps) {
         <DriverOfTheDayVisual
           driver={driver}
           finalPosition={driver.position}
+          imageId={dotd.dotd_image_id}
           startingGrid={dotd.starting_grid}
         />
       )}
@@ -55,15 +56,16 @@ export default function DriverOfTheDay({ dotd, drivers }: DriverOfTheDayProps) {
 interface DriverOfTheDayVisualProps {
   driver: GrandPrixResultDriver;
   finalPosition: number | null;
+  imageId: number | null;
   startingGrid: number | null;
 }
 
 function DriverOfTheDayVisual({
   driver,
   finalPosition,
+  imageId,
   startingGrid,
 }: DriverOfTheDayVisualProps) {
-  const image = getDriverOfTheDayImage(driver.driver_id);
   const name = splitDriverName(driver.name);
   const positionChange =
     startingGrid === null || finalPosition === null
@@ -72,17 +74,20 @@ function DriverOfTheDayVisual({
 
   return (
     <div className="relative mt-4 h-[250px] overflow-hidden rounded-[14px] border border-grand-prix-border-mobile bg-grand-prix-deep min-[1400px]:mt-5 min-[1400px]:h-[388px] min-[1400px]:rounded-2xl min-[1400px]:border-0">
-      {image === null ? (
-        <div className="flex h-full items-center justify-center text-6xl font-bold text-grand-prix-muted/40">
-          {getDriverInitials(driver.name)}
-        </div>
-      ) : (
-        <img
-          alt={`${driver.name} 오늘의 드라이버`}
-          className="size-full object-cover"
-          src={image}
-        />
-      )}
+      <MediaImage
+        alt={`${driver.name} 오늘의 드라이버`}
+        className="size-full object-cover"
+        fallback={
+          <div
+            aria-label={`${driver.name} 오늘의 드라이버 이미지 준비 중`}
+            className="flex h-full items-center justify-center text-6xl font-bold text-grand-prix-muted/40"
+          >
+            {getDriverInitials(driver.name)}
+          </div>
+        }
+        imageId={imageId}
+        loading="lazy"
+      />
       <div className="absolute inset-x-0 bottom-0 hidden h-[220px] bg-linear-to-t from-black/90 via-black/35 to-transparent min-[1400px]:block" />
       <div className="absolute bottom-14 left-6 hidden text-white min-[1400px]:block">
         <p className="text-[11px] font-bold uppercase">Driver of the Day</p>

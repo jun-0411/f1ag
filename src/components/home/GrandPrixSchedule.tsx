@@ -99,7 +99,11 @@ export default function GrandPrixSchedule({
                 to={`/grandprix/${item.grandprix_id}`}
               >
                 <div className="flex items-center gap-2">
-                  <GrandPrixFlag grandPrixName={item.name} size="small" />
+                  <GrandPrixFlag
+                    grandPrixName={item.name}
+                    imageId={item.nation_flag_image_id}
+                    size="small"
+                  />
                   <span className="text-[9px] font-bold text-home-primary">
                     R-{item.round}
                     {item.is_next ? ' · NEXT RACE' : ''}
@@ -151,7 +155,11 @@ export default function GrandPrixSchedule({
                 to={`/grandprix/${item.grandprix_id}`}
               >
                 <div className="flex items-start gap-4">
-                  <GrandPrixFlag grandPrixName={item.name} size="small" />
+                  <GrandPrixFlag
+                    grandPrixName={item.name}
+                    imageId={item.nation_flag_image_id}
+                    size="small"
+                  />
                   <span
                     className={
                       isSelected

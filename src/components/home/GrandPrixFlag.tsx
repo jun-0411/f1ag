@@ -1,17 +1,18 @@
+import MediaImage from '@/components/media/MediaImage';
 import { getGrandPrixDisplay } from '@/constants/grandPrix';
-import { getNationFlagImage } from '@/constants/images';
 
 interface GrandPrixFlagProps {
   grandPrixName: string;
+  imageId: number | null;
   size?: 'small' | 'large' | 'overview';
 }
 
 export default function GrandPrixFlag({
   grandPrixName,
+  imageId,
   size = 'large',
 }: GrandPrixFlagProps) {
   const display = getGrandPrixDisplay(grandPrixName);
-  const imagePath = getNationFlagImage(display.countryCode);
   const isSmall = size === 'small';
   const isOverview = size === 'overview';
   const sizeClass = isOverview
@@ -20,24 +21,23 @@ export default function GrandPrixFlag({
       ? 'h-7 w-[42px]'
       : 'h-[30px] w-[46px]';
 
-  if (imagePath === null) {
-    return (
-      <span
-        aria-label="국기 이미지 준비 중"
-        className={`${sizeClass} grid shrink-0 place-items-center rounded-[5px] bg-home-elevated text-[9px] font-bold text-home-muted`}
-      >
-        {display.countryCode}
-      </span>
-    );
-  }
-
   return (
-    <span className={`${sizeClass} shrink-0 overflow-hidden rounded-[5px]`}>
-      <img
+    <span
+      className={`${sizeClass} shrink-0 overflow-hidden rounded-[5px] bg-home-elevated`}
+    >
+      <MediaImage
         alt={`${display.countryCode} 국기`}
         className="size-full object-cover"
+        fallback={
+          <span
+            aria-label="국기 이미지 준비 중"
+            className="grid size-full place-items-center text-[9px] font-bold text-home-muted"
+          >
+            {display.countryCode}
+          </span>
+        }
         height={isOverview ? 50 : isSmall ? 28 : 30}
-        src={imagePath}
+        imageId={imageId}
         width={isOverview ? 78 : isSmall ? 42 : 46}
       />
     </span>

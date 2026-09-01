@@ -21,7 +21,11 @@ export default function GrandPrixHeader({
   return (
     <header className="pt-6 min-[1400px]:h-[220px] min-[1400px]:pt-5">
       <div className="flex items-center gap-3 min-[1400px]:gap-[22px]">
-        <GrandPrixFlag grandPrixName={grandPrix.name} size="overview" />
+        <GrandPrixFlag
+          grandPrixName={grandPrix.name}
+          imageId={grandPrix.nation_flag_image_id}
+          size="overview"
+        />
         <div className="min-w-0">
           <h1
             className={`truncate leading-tight font-bold text-grand-prix-text min-[1400px]:text-[40px] ${isSessionPage ? 'text-xl' : 'text-[22px]'}`}

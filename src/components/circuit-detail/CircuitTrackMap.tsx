@@ -1,7 +1,7 @@
-import { getCircuitImage } from '@/constants/images';
+import MediaImage from '@/components/media/MediaImage';
 
 interface CircuitTrackMapProps {
-  circuitId: number;
+  circuitImageId: number | null;
   circuitName: string;
   englishName: string;
 }
@@ -18,12 +18,10 @@ const TRACK_LEGEND_ITEMS: TrackLegendItem[] = [
 ];
 
 export default function CircuitTrackMap({
-  circuitId,
+  circuitImageId,
   circuitName,
   englishName,
 }: CircuitTrackMapProps) {
-  const imageSource = getCircuitImage(circuitId);
-
   return (
     <section
       aria-labelledby="circuit-track-map-heading"
@@ -40,17 +38,16 @@ export default function CircuitTrackMap({
       </h2>
 
       <div className="relative mt-3 flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-[linear-gradient(to_right,rgba(42,50,65,0.18)_1px,transparent_1px),linear-gradient(to_bottom,rgba(42,50,65,0.18)_1px,transparent_1px)] bg-[size:38px_38px] min-[1400px]:mt-8 min-[1400px]:bg-[size:54px_54px]">
-        {imageSource === null ? (
-          <p className="px-6 text-center text-xs text-grand-prix-muted">
-            서킷 이미지 준비 중
-          </p>
-        ) : (
-          <img
-            alt={`${circuitName} 트랙 지도`}
-            className="h-auto max-h-[250px] w-full max-w-[310px] object-contain min-[1400px]:max-h-[470px] min-[1400px]:max-w-[620px]"
-            src={imageSource}
-          />
-        )}
+        <MediaImage
+          alt={`${circuitName} 트랙 지도`}
+          className="h-auto max-h-[250px] w-full max-w-[310px] object-contain min-[1400px]:max-h-[470px] min-[1400px]:max-w-[620px]"
+          fallback={
+            <p className="px-6 text-center text-xs text-grand-prix-muted">
+              서킷 이미지 준비 중
+            </p>
+          }
+          imageId={circuitImageId}
+        />
       </div>
 
       <div

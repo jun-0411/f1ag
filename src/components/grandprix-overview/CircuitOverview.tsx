@@ -1,5 +1,5 @@
+import MediaImage from '@/components/media/MediaImage';
 import { getCircuitKoreanName, getCircuitLocation } from '@/constants/circuit';
-import { getCircuitImage } from '@/constants/images';
 import type { GrandPrixCircuitOverview } from '@/types/grandprix';
 import { MapPin } from 'lucide-react';
 import { Link } from 'react-router';
@@ -20,7 +20,6 @@ export default function CircuitOverview({
   circuit,
   circuitId,
 }: CircuitOverviewProps) {
-  const circuitImage = getCircuitImage(circuitId);
   const koreanName = getCircuitKoreanName(
     circuit.circuit_english_name,
     circuit.circuit_korean_name
@@ -91,17 +90,17 @@ export default function CircuitOverview({
           </div>
 
           <div className="flex min-h-[230px] items-center justify-center bg-grand-prix-map p-8 min-[1400px]:min-h-[408px] min-[1400px]:p-10">
-            {circuitImage === null ? (
-              <p className="text-xs text-grand-prix-muted">
-                서킷 이미지 준비 중
-              </p>
-            ) : (
-              <img
-                alt={`${koreanName} 트랙 지도`}
-                className="h-auto w-full max-w-[310px]"
-                src={circuitImage}
-              />
-            )}
+            <MediaImage
+              alt={`${koreanName} 트랙 지도`}
+              className="h-auto w-full max-w-[310px]"
+              fallback={
+                <p className="text-xs text-grand-prix-muted">
+                  서킷 이미지 준비 중
+                </p>
+              }
+              imageId={circuit.circuit_image_id}
+              loading="lazy"
+            />
           </div>
         </div>
       </Link>
