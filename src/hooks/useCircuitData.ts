@@ -1,4 +1,4 @@
-import { getCircuit } from '@/api/circuit/circuit';
+import { getCircuit, getCircuitGrandPrix } from '@/api/circuit/circuit';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
@@ -22,6 +22,11 @@ export default function useCircuitData(circuitIdParameter: string | undefined) {
     queryFn: () => getCircuit(queryCircuitId),
     enabled: circuitId !== null,
   });
+  const hostedGrandPrixQuery = useQuery({
+    queryKey: ['circuit', 'grandprix', queryCircuitId],
+    queryFn: () => getCircuitGrandPrix(queryCircuitId),
+    enabled: circuitId !== null,
+  });
   const isNotFound =
     axios.isAxiosError(circuitQuery.error) &&
     circuitQuery.error.response?.status === 404;
@@ -29,9 +34,14 @@ export default function useCircuitData(circuitIdParameter: string | undefined) {
   return {
     circuitId,
     circuit: circuitQuery.data,
+    hostedGrandPrix: hostedGrandPrixQuery.data?.grand_prix ?? [],
     isPending: circuitId !== null && circuitQuery.isPending,
+    isHostedGrandPrixPending:
+      circuitId !== null && hostedGrandPrixQuery.isPending,
     error: circuitQuery.error,
+    hostedGrandPrixError: hostedGrandPrixQuery.error,
     isNotFound,
     refetch: circuitQuery.refetch,
+    refetchHostedGrandPrix: hostedGrandPrixQuery.refetch,
   };
 }

@@ -11,8 +11,18 @@ import { useParams } from 'react-router';
 
 export default function CircuitDetail() {
   const { circuitId: circuitIdParameter } = useParams();
-  const { circuitId, circuit, isPending, error, isNotFound, refetch } =
-    useCircuitData(circuitIdParameter);
+  const {
+    circuitId,
+    circuit,
+    hostedGrandPrix,
+    isPending,
+    isHostedGrandPrixPending,
+    error,
+    hostedGrandPrixError,
+    isNotFound,
+    refetch,
+    refetchHostedGrandPrix,
+  } = useCircuitData(circuitIdParameter);
 
   if (isPending) {
     return <CircuitDetailLoading />;
@@ -59,7 +69,12 @@ export default function CircuitDetail() {
         </div>
 
         <div className="mt-8 min-[1400px]:mt-32">
-          <HostedGrandPrixSection />
+          <HostedGrandPrixSection
+            error={hostedGrandPrixError}
+            grandPrixItems={hostedGrandPrix}
+            isPending={isHostedGrandPrixPending}
+            onRetry={() => void refetchHostedGrandPrix()}
+          />
         </div>
       </div>
     </div>

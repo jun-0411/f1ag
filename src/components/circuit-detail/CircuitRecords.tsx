@@ -9,8 +9,28 @@ interface RecordPresentation {
   label: string;
 }
 
+const RECORD_SORT_PRIORITY: Record<string, number> = {
+  TRACK: 0,
+  LAP: 1,
+  LASTWIN: 2,
+};
+
 const getRecordPresentation = (recordType: string): RecordPresentation => {
   const normalizedRecordType = recordType.trim().toUpperCase();
+
+  if (normalizedRecordType === 'TRACK') {
+    return {
+      accentClassName: 'text-[#a786ff]',
+      label: 'TRACK RECORD',
+    };
+  }
+
+  if (normalizedRecordType === 'LAP') {
+    return {
+      accentClassName: 'text-[#45d4d0]',
+      label: 'LAP RECORD',
+    };
+  }
 
   if (normalizedRecordType === 'LASTWIN') {
     return {
@@ -21,9 +41,25 @@ const getRecordPresentation = (recordType: string): RecordPresentation => {
 
   return {
     accentClassName: 'text-grand-prix-muted',
-    label: normalizedRecordType || 'RECORD',
+    label: recordType.trim() || 'RECORD',
   };
 };
+
+const sortRecords = (records: CircuitRecordItem[]): CircuitRecordItem[] =>
+  records
+    .map((record, index) => ({ record, index }))
+    .sort((left, right) => {
+      const leftType = left.record.record_type.trim().toUpperCase();
+      const rightType = right.record.record_type.trim().toUpperCase();
+      const priorityDifference =
+        (RECORD_SORT_PRIORITY[leftType] ?? Number.MAX_SAFE_INTEGER) -
+        (RECORD_SORT_PRIORITY[rightType] ?? Number.MAX_SAFE_INTEGER);
+
+      return priorityDifference === 0
+        ? left.index - right.index
+        : priorityDifference;
+    })
+    .map(({ record }) => record);
 
 const getRecordMeta = (record: CircuitRecordItem): string => {
   const meta = [record.driver_team, record.record_year?.toString()].filter(
@@ -34,6 +70,8 @@ const getRecordMeta = (record: CircuitRecordItem): string => {
 };
 
 export default function CircuitRecords({ records }: CircuitRecordsProps) {
+  const sortedRecords = sortRecords(records);
+
   return (
     <section
       aria-labelledby="circuit-records-heading"
@@ -47,13 +85,13 @@ export default function CircuitRecords({ records }: CircuitRecordsProps) {
       </h2>
 
       <div className="mt-4 overflow-hidden rounded-[14px] border border-grand-prix-border-mobile bg-grand-prix-card-mobile px-3 min-[1400px]:mt-0 min-[1400px]:rounded-none min-[1400px]:border-0 min-[1400px]:bg-transparent min-[1400px]:px-0">
-        {records.length === 0 ? (
+        {sortedRecords.length === 0 ? (
           <p className="flex min-h-36 items-center justify-center px-4 text-center text-xs leading-5 text-grand-prix-muted">
             아직 제공된 기록이 없습니다.
           </p>
         ) : (
           <ul>
-            {records.map((record, index) => {
+            {sortedRecords.map((record, index) => {
               const presentation = getRecordPresentation(record.record_type);
               const recordKey = `${record.record_type}-${record.driver_id ?? 'unknown'}-${index}`;
 
