@@ -16,10 +16,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20.11.1'
+      - uses: actions/setup-node@v6
       - name: Install dependencies
         run: yarn install
+
+      - name: Format package.json
+        run: yarn biome check package.json --write
+
+      - name: Format MSW worker
+        run: yarn biome format --write public/mockServiceWorker.js
+        
       - name: Check
         run: yarn check-all

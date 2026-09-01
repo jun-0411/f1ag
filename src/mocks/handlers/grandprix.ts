@@ -1,0 +1,306 @@
+import {
+  GRAND_PRIX_MOCK_SEASON,
+  grandPrixDetailMockById,
+  grandPrixListMock,
+  grandPrixOverviewMockById,
+  grandPrixResultMockById,
+} from '@/mocks/db/grandprix';
+import { grandPrixSessionDetailMockById } from '@/mocks/db/grandprixDetail';
+import { grandPrixHistoryMockById } from '@/mocks/db/grandprixHistory';
+import type { ApiErrorResponse } from '@/types/api';
+import type {
+  GrandPrixResultSession,
+  GrandPrixSessionCode,
+} from '@/types/grandprix';
+import { http, HttpResponse } from 'msw';
+
+const MIN_SEASON = 1950;
+const MAX_SEASON = 2100;
+
+const createSeasonValidationError = (
+  input: string,
+  type: string,
+  message: string,
+  ctx?: Record<string, unknown>
+): ApiErrorResponse => ({
+  detail: [
+    {
+      type,
+      loc: ['query', 'season'],
+      msg: message,
+      input,
+      ctx,
+    },
+  ],
+});
+
+const createGrandPrixIdValidationError = (input: string): ApiErrorResponse => ({
+  detail: [
+    {
+      type: 'int_parsing',
+      loc: ['path', 'grand_prix_id'],
+      msg: 'Input should be a valid integer, unable to parse string as an integer',
+      input,
+    },
+  ],
+});
+
+const createResultSessionValidationError = (
+  input: string
+): ApiErrorResponse => ({
+  detail: [
+    {
+      type: 'enum',
+      loc: ['query', 'session'],
+      msg: "Input should be 'R' or 'S'",
+      input,
+      ctx: { expected: "'R' or 'S'" },
+    },
+  ],
+});
+
+const createHistorySessionValidationError = (
+  input: string
+): ApiErrorResponse => ({
+  detail: [
+    {
+      type: 'enum',
+      loc: ['query', 'session'],
+      msg: "Input should be 'FP1', 'FP2', 'FP3', 'Q', 'SQ', 'S' or 'R'",
+      input,
+      ctx: { expected: "'FP1', 'FP2', 'FP3', 'Q', 'SQ', 'S' or 'R'" },
+    },
+  ],
+});
+
+const parseGrandPrixId = (
+  parameter: string | readonly string[] | undefined
+): number | null => {
+  if (typeof parameter !== 'string' || !/^[+-]?\d+$/.test(parameter)) {
+    return null;
+  }
+
+  return Number(parameter);
+};
+
+const parseResultSession = (
+  parameter: string
+): GrandPrixResultSession | null => {
+  if (parameter === 'R' || parameter === 'S') {
+    return parameter;
+  }
+
+  return null;
+};
+
+const GRAND_PRIX_SESSION_CODES: GrandPrixSessionCode[] = [
+  'FP1',
+  'FP2',
+  'FP3',
+  'Q',
+  'SQ',
+  'S',
+  'R',
+];
+
+const parseHistorySession = (parameter: string): GrandPrixSessionCode | null =>
+  GRAND_PRIX_SESSION_CODES.find((session) => session === parameter) ?? null;
+
+export const grandPrixHandlers = [
+  http.get('*/api/grandprix/:grandPrixId/detail', ({ params, request }) => {
+    const grandPrixIdParameter = params.grandPrixId;
+    const grandPrixId = parseGrandPrixId(grandPrixIdParameter);
+
+    if (grandPrixId === null) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createGrandPrixIdValidationError(String(grandPrixIdParameter)),
+        { status: 422 }
+      );
+    }
+
+    const requestUrl = new URL(request.url);
+    const sessionParameter = requestUrl.searchParams.get('session') ?? 'R';
+    const session = parseHistorySession(sessionParameter);
+
+    if (session === null) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createHistorySessionValidationError(sessionParameter),
+        { status: 422 }
+      );
+    }
+
+    const detail = grandPrixSessionDetailMockById[grandPrixId]?.[session];
+    if (detail === undefined) {
+      return HttpResponse.json<ApiErrorResponse>(
+        { detail: `Grand Prix ${grandPrixId} ${session} detail not found` },
+        { status: 404 }
+      );
+    }
+
+    return HttpResponse.json(detail);
+  }),
+  http.get('*/api/grandprix/:grandPrixId/history', ({ params, request }) => {
+    const grandPrixIdParameter = params.grandPrixId;
+    const grandPrixId = parseGrandPrixId(grandPrixIdParameter);
+
+    if (grandPrixId === null) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createGrandPrixIdValidationError(String(grandPrixIdParameter)),
+        { status: 422 }
+      );
+    }
+
+    const requestUrl = new URL(request.url);
+    const sessionParameter = requestUrl.searchParams.get('session') ?? 'R';
+    const session = parseHistorySession(sessionParameter);
+
+    if (session === null) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createHistorySessionValidationError(sessionParameter),
+        { status: 422 }
+      );
+    }
+
+    const history = grandPrixHistoryMockById[grandPrixId]?.[session];
+    if (history === undefined) {
+      return HttpResponse.json<ApiErrorResponse>(
+        {
+          detail: `Grand Prix ${grandPrixId} ${session} history not found`,
+        },
+        { status: 404 }
+      );
+    }
+
+    return HttpResponse.json(history);
+  }),
+  http.get('*/api/grandprix/:grandPrixId/result', ({ params, request }) => {
+    const grandPrixIdParameter = params.grandPrixId;
+    const grandPrixId = parseGrandPrixId(grandPrixIdParameter);
+
+    if (grandPrixId === null) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createGrandPrixIdValidationError(String(grandPrixIdParameter)),
+        { status: 422 }
+      );
+    }
+
+    const requestUrl = new URL(request.url);
+    const sessionParameter = requestUrl.searchParams.get('session') ?? 'R';
+    const session = parseResultSession(sessionParameter);
+
+    if (session === null) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createResultSessionValidationError(sessionParameter),
+        { status: 422 }
+      );
+    }
+
+    const result = grandPrixResultMockById[grandPrixId]?.[session];
+    if (result === undefined) {
+      return HttpResponse.json<ApiErrorResponse>(
+        {
+          detail: `Grand Prix ${grandPrixId} ${session} result not found`,
+        },
+        { status: 404 }
+      );
+    }
+
+    return HttpResponse.json(result);
+  }),
+  http.get('*/api/grandprix/:grandPrixId/overview', ({ params }) => {
+    const grandPrixIdParameter = params.grandPrixId;
+    const grandPrixId = parseGrandPrixId(grandPrixIdParameter);
+
+    if (grandPrixId === null) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createGrandPrixIdValidationError(String(grandPrixIdParameter)),
+        { status: 422 }
+      );
+    }
+
+    const overview = grandPrixOverviewMockById[grandPrixId];
+    if (overview === undefined) {
+      return HttpResponse.json<ApiErrorResponse>(
+        { detail: `Grand Prix ${grandPrixId} not found` },
+        { status: 404 }
+      );
+    }
+
+    return HttpResponse.json(overview);
+  }),
+  http.get('*/api/grandprix/:grandPrixId', ({ params }) => {
+    const grandPrixIdParameter = params.grandPrixId;
+    const grandPrixId = parseGrandPrixId(grandPrixIdParameter);
+
+    if (grandPrixId === null) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createGrandPrixIdValidationError(String(grandPrixIdParameter)),
+        { status: 422 }
+      );
+    }
+
+    const grandPrix = grandPrixDetailMockById[grandPrixId];
+    if (grandPrix === undefined) {
+      return HttpResponse.json<ApiErrorResponse>(
+        { detail: `Grand Prix ${grandPrixId} not found` },
+        { status: 404 }
+      );
+    }
+
+    return HttpResponse.json(grandPrix);
+  }),
+  http.get('*/api/grandprix', ({ request }) => {
+    const requestUrl = new URL(request.url);
+    const seasonParameter = requestUrl.searchParams.get('season');
+
+    if (seasonParameter !== null && !/^[+-]?\d+$/.test(seasonParameter)) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createSeasonValidationError(
+          seasonParameter,
+          'int_parsing',
+          'Input should be a valid integer, unable to parse string as an integer'
+        ),
+        { status: 422 }
+      );
+    }
+
+    const season =
+      seasonParameter === null
+        ? GRAND_PRIX_MOCK_SEASON
+        : Number(seasonParameter);
+
+    if (season < MIN_SEASON) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createSeasonValidationError(
+          seasonParameter ?? '',
+          'greater_than_equal',
+          `Input should be greater than or equal to ${MIN_SEASON}`,
+          { ge: MIN_SEASON }
+        ),
+        { status: 422 }
+      );
+    }
+
+    if (season > MAX_SEASON) {
+      return HttpResponse.json<ApiErrorResponse>(
+        createSeasonValidationError(
+          seasonParameter ?? '',
+          'less_than_equal',
+          `Input should be less than or equal to ${MAX_SEASON}`,
+          { le: MAX_SEASON }
+        ),
+        { status: 422 }
+      );
+    }
+
+    if (season !== GRAND_PRIX_MOCK_SEASON) {
+      // OpenAPI에 빠진 데이터 없음 정책도 실제 서버의 404 응답과 동일하게 흉내 낸다.
+      return HttpResponse.json<ApiErrorResponse>(
+        { detail: `Season ${season} not found` },
+        { status: 404 }
+      );
+    }
+
+    return HttpResponse.json(grandPrixListMock);
+  }),
+];

@@ -1,0 +1,223 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  color: #f5f7fa;
+  background: #0b0d12;
+  font-family: "Noto Sans KR", Inter, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  --home-page: #0a0d12;
+  --home-card: #141922;
+  --home-row: #1a202b;
+  --home-elevated: #242c39;
+  --home-border: #303a49;
+  --home-primary: #ff2d46;
+  --home-secondary: #22d3c5;
+  --home-text: #f7f8fa;
+  --home-muted: #9aa4b2;
+  --home-positive: #35d39a;
+  --grand-prix-page: #0b0d12;
+  --grand-prix-card: #151a23;
+  --grand-prix-card-mobile: #121821;
+  --grand-prix-row: #1b222e;
+  --grand-prix-deep: #0f1219;
+  --grand-prix-map: #10151d;
+  --grand-prix-nav: #11161f;
+  --grand-prix-active: #2b1118;
+  --grand-prix-border: #2d3747;
+  --grand-prix-border-mobile: #293241;
+  --grand-prix-primary: #ff2442;
+  --grand-prix-info: #4ca7ff;
+  --grand-prix-warning: #ffcf4a;
+  --grand-prix-director: #9b8afb;
+  --grand-prix-text: #f5f7fa;
+  --grand-prix-muted: #98a2b3;
+  --grand-prix-muted-mobile: #8e99aa;
+  --grand-prix-unit: #6f7a8d;
+  --grand-prix-success: #35d39a;
+  --grand-prix-performance: #a78bfa;
+  --grand-prix-tooltip: #1c2431;
+  --grand-prix-tooltip-border: #46536a;
+  --grand-prix-tooltip-text: #b9c2d0;
+}
+
+html {
+  min-width: 320px;
+  min-height: 100%;
+  background: #0b0d12;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: #0b0d12;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: "Noto Sans KR", Inter, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-home-page: var(--home-page);
+  --color-home-card: var(--home-card);
+  --color-home-row: var(--home-row);
+  --color-home-elevated: var(--home-elevated);
+  --color-home-border: var(--home-border);
+  --color-home-primary: var(--home-primary);
+  --color-home-secondary: var(--home-secondary);
+  --color-home-text: var(--home-text);
+  --color-home-muted: var(--home-muted);
+  --color-home-positive: var(--home-positive);
+  --color-grand-prix-page: var(--grand-prix-page);
+  --color-grand-prix-card: var(--grand-prix-card);
+  --color-grand-prix-card-mobile: var(--grand-prix-card-mobile);
+  --color-grand-prix-row: var(--grand-prix-row);
+  --color-grand-prix-deep: var(--grand-prix-deep);
+  --color-grand-prix-map: var(--grand-prix-map);
+  --color-grand-prix-nav: var(--grand-prix-nav);
+  --color-grand-prix-active: var(--grand-prix-active);
+  --color-grand-prix-border: var(--grand-prix-border);
+  --color-grand-prix-border-mobile: var(--grand-prix-border-mobile);
+  --color-grand-prix-primary: var(--grand-prix-primary);
+  --color-grand-prix-info: var(--grand-prix-info);
+  --color-grand-prix-warning: var(--grand-prix-warning);
+  --color-grand-prix-director: var(--grand-prix-director);
+  --color-grand-prix-text: var(--grand-prix-text);
+  --color-grand-prix-muted: var(--grand-prix-muted);
+  --color-grand-prix-muted-mobile: var(--grand-prix-muted-mobile);
+  --color-grand-prix-unit: var(--grand-prix-unit);
+  --color-grand-prix-success: var(--grand-prix-success);
+  --color-grand-prix-performance: var(--grand-prix-performance);
+  --color-grand-prix-tooltip: var(--grand-prix-tooltip);
+  --color-grand-prix-tooltip-border: var(--grand-prix-tooltip-border);
+  --color-grand-prix-tooltip-text: var(--grand-prix-tooltip-text);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  html {
+    @apply font-sans;
+  }
+}

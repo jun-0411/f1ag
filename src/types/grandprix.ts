@@ -1,0 +1,158 @@
+export interface GrandPrixListRequest {
+  season?: number;
+}
+
+export interface GrandPrixListItem {
+  grandprix_id: number;
+  is_current: boolean;
+  is_next: boolean;
+  name: string;
+  round: number;
+  nation_flag_image_id: number | null;
+  first_driver_id: number | null;
+  first_driver_image_id: number | null;
+  date: string | null;
+}
+
+export interface GrandPrixListResponse {
+  grandprix: GrandPrixListItem[];
+}
+
+export type GrandPrixSessionCode =
+  | 'FP1'
+  | 'FP2'
+  | 'FP3'
+  | 'Q'
+  | 'SQ'
+  | 'S'
+  | 'R';
+
+export interface GrandPrixResponse {
+  name: string;
+  round: number;
+  circuit_name: string;
+  circuit_id: number;
+  nation_flag_image_id: number | null;
+  is_sprint: boolean;
+}
+
+export interface GrandPrixScheduleItem {
+  session_code: GrandPrixSessionCode;
+  time: string | null;
+}
+
+export interface GrandPrixWeatherItem {
+  session_code: GrandPrixSessionCode;
+  temperature: number | null;
+  rainfall?: boolean | null;
+}
+
+export interface GrandPrixTireOverviewItem {
+  tire_code: number;
+  tire_type: string | null;
+  tire_set: number | null;
+}
+
+export interface GrandPrixCircuitOverview {
+  circuit_korean_name: string | null;
+  circuit_english_name: string;
+  circuit_region_name: string | null;
+  circuit_image_id: number | null;
+  circuit_laps: number | null;
+  circuit_one_lap_length: number | null;
+  circuit_total_length: number | null;
+}
+
+export interface GrandPrixOverviewResponse {
+  schedule: GrandPrixScheduleItem[];
+  weather: GrandPrixWeatherItem[];
+  tire: GrandPrixTireOverviewItem[];
+  circuit: GrandPrixCircuitOverview;
+}
+
+export type GrandPrixResultSession = 'R' | 'S';
+
+export interface GrandPrixResultDriver {
+  driver_id: number;
+  name: string;
+  teamname: string;
+  team_image_id: number | null;
+  position: number | null;
+  points: number | null;
+  rank_change: number;
+  racetime: string | null;
+}
+
+export interface GrandPrixDriverOfTheDay {
+  driver_id: number;
+  dotd_image_id: number | null;
+  starting_grid: number | null;
+}
+
+export interface GrandPrixResultResponse {
+  driver: GrandPrixResultDriver[];
+  dotd: GrandPrixDriverOfTheDay | null;
+}
+
+export interface GrandPrixHistoryFlag {
+  flag_type: string;
+  startlap: number | null;
+  endlap: number | null;
+}
+
+export interface GrandPrixHistoryLap {
+  lap_number: number;
+  position: number | null;
+  laptime: string | null;
+  gaptime: number | null;
+}
+
+export interface GrandPrixHistoryTireStint {
+  tire_type: string | null;
+  startlap: number;
+  endlap: number;
+}
+
+export interface GrandPrixHistoryDriver {
+  driver_id: number;
+  name: string;
+  team: string;
+  team_image_id: number | null;
+  driver_color: string | null;
+  laps: GrandPrixHistoryLap[];
+  tire: GrandPrixHistoryTireStint[];
+}
+
+export interface GrandPrixHistoryResponse {
+  flags: GrandPrixHistoryFlag[];
+  driver: GrandPrixHistoryDriver[];
+}
+
+export interface GrandPrixDetailTireStint {
+  tire_type: string | null;
+  startlap: number;
+  endlap: number;
+}
+
+export interface GrandPrixDetailDriver {
+  driver_id: number;
+  name: string;
+  team_image_id: number | null;
+  team_color: string | null;
+  racetime: string | null;
+  position: number | null;
+  fastestlap: string | null;
+  speedtrap: number | null;
+  is_completed: boolean;
+  tire: GrandPrixDetailTireStint[];
+  theoretical_lap_time: string | null;
+  sector1_time: string | null;
+  sector2_time: string | null;
+  sector3_time: string | null;
+  lap_amount: number | null;
+  points: number | null;
+}
+
+export interface GrandPrixDetailResponse {
+  driver: GrandPrixDetailDriver[];
+}
