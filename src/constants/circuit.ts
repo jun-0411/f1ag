@@ -35,6 +35,11 @@ const CIRCUIT_DISPLAY_BY_ENGLISH_NAME: Record<string, CircuitDisplay> = {
     countryCode: 'GB',
     location: 'Silverstone, United Kingdom',
   },
+  'Suzuka Circuit': {
+    koreanName: '스즈카 서킷',
+    countryCode: 'JP',
+    location: 'Suzuka, Japan',
+  },
 };
 
 export const getCircuitKoreanName = (
